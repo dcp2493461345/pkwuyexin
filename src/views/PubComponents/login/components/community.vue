@@ -167,7 +167,6 @@ export default {
         }
       })
       this.$forceUpdate()
-      // console.log(this.dataLists, 'this.day')
     },
     wyClickHandler (id) {
       this.wyParkType = 1
@@ -178,7 +177,6 @@ export default {
         }
       })
       this.$forceUpdate()
-      // console.log(this.dataLists, 'this.day')
     },
     //点击全部时获取小区数据lists
     getComunitLists (page = 1, uid = this.uid) {
@@ -190,14 +188,12 @@ export default {
         })
         this.page = resp.msg.page
         this.pages = resp.msg.pageNum
-        // console.log(resp, '页面创建时的resp')
       })
     },
     //点击首字母获取小区列表
     getLettersLists (page = 1, name) {
       const uid = this.uid
       postSelect_highest({ page, uid, name }).then(resp => {
-        console.log(resp, '点击首字母选择小区resp')
         this.dataLists = resp.msg.data
         this.dataLists.forEach(item => {
           item.wyhightLight = true
@@ -207,7 +203,7 @@ export default {
         this.pages = resp.msg.pageNum
       })
     },
-    //圆圈按钮
+    //点击圆圈按钮
     selectHandler (Communityid, wyhightLight, Community_name) {
       const type = wyhightLight ? 1 : 2
       // console.log(Communityid, type, 'Communityid')
@@ -319,7 +315,6 @@ export default {
       this.page = resp.msg.page
       this.pages = resp.msg.pageNum
       this.total = resp.msg.total
-      // console.log(resp, '页面创建时的resp')
     })
   }
 }

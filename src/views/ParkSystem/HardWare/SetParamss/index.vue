@@ -2,7 +2,7 @@
   <div>
     <div class="hard-setparamClass">
       <div v-if="setModifyVisble" class="setparam-container">
-        <el-collapse v-model="activeNames" @change="handleChange">
+        <el-collapse v-model="activeNames">
           <!-- 基础设置 -->
           <el-collapse-item title="基础设置" name="1">
             <!-- 总 -->
@@ -85,7 +85,10 @@
                   <el-form-item label="支付后多少分钟内需要离场（分钟）:" prop="end_time">
                     <el-input v-model="formLabelAlign.end_time" />
                   </el-form-item>
-                  <el-form-item label="一位或多位多车的情况下，当车位已有停放车辆时，所属车位下其他车辆入场是否允许抬杆放行:" class="more-class">
+                  <el-form-item
+                    label="一位或多位多车的情况下，当车位已有停放车辆时，所属车位下其他车辆入场是否允许抬杆放行:"
+                    class="more-class"
+                  >
                     <el-radio-group v-model="formLabelAlign.car_double">
                       <el-radio :label="1">是</el-radio>
                       <el-radio :label="2">否</el-radio>
@@ -364,7 +367,6 @@
                       class="ledSelect"
                       placeholder
                       @change="cc1(index)"
-                      @blur="cc1Blur(index)"
                     >
                       <!-- v-model="value"中'value"的值为el-option的value属性值 -->
                       <div v-if="selectShow">
@@ -831,7 +833,7 @@ export default {
       userInfoList: {}, // localStorage的userInfo
     }
   },
-  computed: {},
+  //用户在输入时做的一些限制
   watch: {
     // 车位总数
     'formLabelAlign.basis_number': {
@@ -848,8 +850,6 @@ export default {
           this.formLabelAlign.basis_number = o
         }
       },
-      // deep: true,
-      // immediate: true
     },
     // 同一道口，重复识别车牌间隔时间（秒）
     'formLabelAlign.car_endtime': {
@@ -866,8 +866,6 @@ export default {
           this.formLabelAlign.car_endtime = o
         }
       },
-      // deep: true,
-      // immediate: true
     },
     // 支付后多少分钟内需要离场（分钟）(不能只输入0并且只能为整数)
     'formLabelAlign.end_time': {
@@ -884,8 +882,6 @@ export default {
           this.formLabelAlign.end_time = o
         }
       },
-      // deep: true,
-      // immediate: true
     },
     // 免费停车时间（分钟）(不能只输入0并且只能为整数)
     'formLabelAlign.car_time': {
@@ -902,8 +898,6 @@ export default {
           this.formLabelAlign.car_time = o
         }
       },
-      // deep: true,
-      // immediate: true
     },
     // 基本收费时长（小时）(不能只输入0并且只能为整数)
     'formLabelAlign.car_price_time': {
@@ -920,8 +914,6 @@ export default {
           this.formLabelAlign.car_price_time = o
         }
       },
-      // deep: true,
-      // immediate: true
     },
     // 基本收费费用（元）:(不能只输入0并且只能为两位小数)
     'formLabelAlign.car_price': {
@@ -935,8 +927,6 @@ export default {
           this.formLabelAlign.car_price = o
         }
       },
-      // deep: true,
-      // immediate: true
     },
     //超时后收费计时单位（小时）:(不能只输入0并且只能为整数)
     'formLabelAlign.time_out': {
@@ -953,8 +943,6 @@ export default {
           this.formLabelAlign.time_out = o
         }
       },
-      // deep: true,
-      // immediate: true
     },
     // 超时后收费单价（元）:(不能只输入0并且只能为两位小数)
     'formLabelAlign.time_out_price': {
@@ -968,8 +956,6 @@ export default {
           this.formLabelAlign.time_out_price = o
         }
       },
-      // deep: true,
-      // immediate: true
     },
     // 单日收费最高限制（元）:(不能只输入0并且只能为两位小数)
     'formLabelAlign.max_price': {
@@ -983,8 +969,6 @@ export default {
           this.formLabelAlign.max_price = o
         }
       },
-      // deep: true,
-      // immediate: true
     },
     // 最高收费金额(不能只输入0并且只能为两位小数)
     'formLabelAlign.single_max_price': {
@@ -998,8 +982,6 @@ export default {
           this.formLabelAlign.single_max_price = o
         }
       },
-      // deep: true,
-      // immediate: true
     },
     // 长租车提前提示车位到期时间（天）(不能只输入0并且只能整数)
     'formLabelAlign.car_rent_day': {
@@ -1016,8 +998,6 @@ export default {
           this.formLabelAlign.car_rent_day = o
         }
       },
-      // deep: true,
-      // immediate: true
     },
     //车辆通过时，显示屏重复显示信息的时间(不能只输入0并且只能整数)
     'formLabelAlign.time': {
@@ -1034,8 +1014,6 @@ export default {
           this.formLabelAlign.time = o
         }
       },
-      // deep: true,
-      // immediate: true
     },
     //长租车欠费缓冲时长（天）(不能只输入0并且只能整数)
     'formLabelAlign.car_rent_price': {
@@ -1049,8 +1027,6 @@ export default {
           this.formLabelAlign.car_rent_price = o
         }
       },
-      // deep: true,
-      // immediate: true
     },
   },
   created () {
@@ -1102,9 +1078,6 @@ export default {
 
   },
   methods: {
-    cc1Blur () {
-      console.log('jjjjjjjjjj')
-    },
     cc (index) {
       this.$refs[`car_rent_admission1${index}`][0].innerHTML = ''
     },
@@ -1145,8 +1118,8 @@ export default {
       this.formLabelAlign.car_centons = ''
       this.myselfToast = ''
     },
+    //自定义提示语的失去焦点
     myselfBlur () {
-      console.log('ppp')
       if (this.formLabelAlign.car_centons === '') {
         this.myselfToast = '请输入自定义提示语'
       } else {
@@ -1164,14 +1137,7 @@ export default {
         this.HightestToast = ''
       }
     },
-    formatTooltip (val) {
-      return val / 10;
-    },
-    selectFacus () {
-    },
-    handleChange (val) {
-      console.log(val)
-    },
+    //选择门岗
     hanPoid_DoorType (id) {
       this.mengangToast = ''
       this.formLabelAlign.car_yellow = id
@@ -1200,10 +1166,8 @@ export default {
       this.formLabelAlign.car_time = this.formLabelAlign.car_time
       this.formLabelAlign.parkid = this.parkid
       // 基础设置左边部分判断
-
       this.$refs.ruleFormBasisLeft.validate((valid) => {
         if (valid) {
-          // alert('submit!');
           this.validataformName = true
         } else {
           this.validataformName = false
@@ -1283,7 +1247,6 @@ export default {
           this.HightestToast = ''
         }
       } else {
-
         this.validataformName7 = true
       }
       //led左边
@@ -1611,7 +1574,7 @@ export default {
   font-weight: 400;
   color: rgba(102, 102, 102, 1);
   margin-bottom: 8px;
-      margin-top: -8px;
+  margin-top: -8px;
 }
 /deep/ .el-input__icon {
   line-height: 30px !important;

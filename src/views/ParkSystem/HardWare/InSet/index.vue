@@ -41,7 +41,7 @@
       <!-- 分页 -->
       <div v-if="isShowAdd">
         <div v-if="isShowCard">
-          <my-pages :pageInfo="pageInfo" @handleCurrentChange="handleCurrentChange" class="myfenye"></my-pages>
+          <my-pages :pageInfo="pageInfo"  class="myfenye"></my-pages>
         </div>
       </div>
     </div>
@@ -61,7 +61,6 @@
             <el-select v-model="setting_name" placeholder="请选择停车场" class="choice-class">
               <el-option v-for="item in parkLists" :key="item.id" :value="item.setting_name">
                 <span class="chenp" @click="hanid(item.id)">{{ item.setting_name }}</span>
-                <!-- <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span> -->
               </el-option>
             </el-select>
           </el-form-item>
@@ -126,12 +125,7 @@ export default {
       tableData: []
     }
   },
-  computed: {},
-  watch: {
-
-  },
   created () {
-    // consolge.log('内场管理创建')
     this.userInfo = JSON.parse(localStorage.getItem('userInfo'))
     const { Communityid, uid } = this.userInfo
     this.parkid = this.userInfo.Communityid
@@ -161,23 +155,17 @@ export default {
       }
     })
   },
-  mounted () {
-
-  },
   methods: {
     hanid (id) {
-      console.log(id, 'handpoid')
       this.set_id = id
     },
+    //第一次绑定确认
     bangdingDid () {
-      // console.log(this.doorLists1.join(','), 'checkListcheckListcheckList')
       const door_id = this.doorLists1.join(',')//门岗checkbox
       const set_id = this.set_id//选择停车场
       const id = this.inSetId
-      console.log({ id, set_id, door_id, parkid: this.parkid }, '参数')
       //前端验证
       if (!set_id) {
-        // console.log('lll')
         this.parkToast = '请选择停车场'
         setTimeout(() => {
           this.parkToast = ''
@@ -189,7 +177,6 @@ export default {
           this.mengangToast = ''
         }, 2000)
       } else if (set_id && door_id) {
-        // alert('请求接口')
         postBindingInfoBach({ id, set_id, door_id, parkid: this.parkid }).then(resp => {
           if (resp.data === '绑定成功') {
             this.$message({
@@ -204,23 +191,17 @@ export default {
     },
     //请求内场数据列表
     getInsetList (page = 1, size = 10, parkid = this.parkid) {
-      // const parkid = this.parkid
       postBindingCar({ page, size, parkid }).then(resp => {
-        console.log(resp, '内场response')
         this.tableData = resp.data.data
         this.pageInfo.total = resp.data.total
         this.pageInfo.page = resp.data.page
       })
     },
-    handleCurrentChange (val) {
-      console.log(val)
-    },
+    //已经绑定过后点击确认
     handleBandi (index, row) {
-      console.log(row, 'row')
       this.inSetId = row.id
       const id = row.id
       postBindingInfo({ id: id, parkid: this.parkid }).then(resp => {
-        console.log(resp, '回显')
         this.parkLists = resp.data.set_list
         if (resp.data.seting_info) {
           //修改绑定
@@ -243,9 +224,9 @@ export default {
       })
       this.centerDialogVisible1 = true
     },
+    //点击修改
     handleEdit (index, row) {
       this.isShowCard = false
-      // console.log(row, 'row')
       this.inSetId = row.id
     },
     isShowCardFunc1 (data) {
@@ -259,6 +240,7 @@ export default {
     //新增内场
     addClick () {
       if (this.showInset) {
+        //内场界面显示
         this.isShowAdd = false
       } else {
         this.$message({

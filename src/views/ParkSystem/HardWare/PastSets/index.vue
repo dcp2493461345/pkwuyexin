@@ -70,10 +70,6 @@ export default {
       toast1: '',//门岗名称提示语
     }
   },
-  computed: {},
-  watch: {
-
-  },
   created () {
     const page = 1
     const size = 10
@@ -82,14 +78,12 @@ export default {
     this.parkid = this.userInfo.Communityid
     const auth_id = this.$route.meta.auth_id
     postDoorList({ page, size, parkid: this.parkid }).then(resp => {
-      console.log(resp, '查询门岗列表')
       this.tableData = resp.data.data
       this.pageInfo.total = resp.data.total
       this.pageInfo.page = resp.data.page
     })
     // 按钮权限判定
     postSelect_button({ Communityid, uid, auth_id }).then(resp => {
-      console.log(resp, 'resp按钮权限')
       if (resp.code === 200) {
         this.buttonLists = resp.data
         var btnList = this.buttonLists
@@ -97,24 +91,9 @@ export default {
           if (list.auth_name === '新增门岗') {
             this.buttonallShow = true
           }
-          // if (list.auth_name === '修改基础设置') {
-          //   this.buttonbasisShow = true
-          // }
-          // if (list.auth_name === '修改开闸管理') {
-          //   this.buttonbrakeShow = true
-          // }
-          // if (list.auth_name === '修改收费设置') {
-          //   this.buttonpriceShow = true
-          // }
-          // if (list.auth_name === '修改显示屏设置') {
-          //   this.buttonLedShow = true
-          // }
         })
       }
     })
-  },
-  mounted () {
-
   },
   methods: {
     // 分页设置

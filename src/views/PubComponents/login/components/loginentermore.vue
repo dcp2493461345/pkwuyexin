@@ -48,11 +48,8 @@
       <p v-show="true" class="password-toast">{{ secondMsg }}</p>
     </div>
     <!-- 提交 -->
-    <!-- <el-button :loading="loading" type="primary" @click.native.prevent="handlenewpwd" class="save-btn" >确认</el-button>
-    <el-button :loading="loading" type="primary" @click.native.prevent="handleforgive" class="forgive">放弃</el-button>-->
     <div class="reset-btn" @mouseleave="flag=1">
       <div :class="flag===1 ? 'btn1':'btn2'" @mouseover="flag=1" @click="handlenewpwd">确定</div>
-      <!-- <div :class="flag!==1 ? 'btn1':'btn2'" @mouseover="flag=2" @click="handleforgive">放弃</div> -->
     </div>
   </el-form>
 </template>

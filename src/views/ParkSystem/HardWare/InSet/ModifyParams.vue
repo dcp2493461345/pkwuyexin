@@ -3,7 +3,7 @@
     <div class="card-main">
       <span id="newadd" @click="isExit">返回上一级</span>
     </div>
-    <el-collapse v-model="activeNames" @change="handleChange" :disabled="true">
+    <el-collapse v-model="activeNames"  :disabled="true">
       <!-- 基础设置 -->
       <el-collapse-item title="基础设置" name="1">
         <!-- 总 -->
@@ -523,11 +523,6 @@ export default {
         } else {
           callback();
         }
-        // if (value == 0 || value == 0.) {
-        //   callback(new Error('请输入大于零基本收费费用'));
-        // } else {
-        //   callback();
-        // }
       }
     }
     const checkPrice1 = (rule, value, callback) => {
@@ -542,15 +537,6 @@ export default {
       }
     }
     const checkPrice2 = (rule, value, callback) => {
-      // if (!value) {
-      //   return callback(new Error('请输入单日收费最高限制'));
-      // } else {
-      // if (value == 0 || value == 0.) {
-      //   callback(new Error('请输入大于零的单日收费最高限制'));
-      // } else {
-      //   callback();
-      // }
-      // }
     }
     return {
       chineseNum: ['一', '二', '三', '四', '五', '六'],//显示屏
@@ -821,7 +807,6 @@ export default {
       }
     }
   },
-  computed: {},
   watch: {
     // 车位总数只能输入汉字
     'formLabelAlign.basisinfo.basis_number': {
@@ -1040,7 +1025,6 @@ export default {
     //显示屏下拉提示语
     //led下拉提示语
     postMonthly({}).then(resp => {
-      console.log(resp, 'resp提示语')
       this.screenConten.car_rent_admission1 = resp.data
     })
     postMonthlyOut({}).then(resp => {
@@ -1072,16 +1056,12 @@ export default {
         this.options_ChoiceDoor = resp.data
       })
     },
-    handleChange (val) {
-      console.log(val)
-    },
     hanPoid_DoorType (id) {
       this.mengangToast = ''
       this.formLabelAlign.brakeinfo.car_yellow = id
     },
     //门岗选择为否时，清除选择的数据
     mengangChange (num) {
-      console.log(num, 'mengangChange')
       if (num === 0) {
         this.formLabelAlign.brakeinfo.car_yellow = num
       }
@@ -1146,8 +1126,8 @@ export default {
         this.$refs[`car_no_appearance1${i}`][0].innerHTML = ''
       }
     },
+    //点击确认
     addSetting () {
-      // console.log(this.ledQuery
       var modifyAllQuery = {}
       modifyAllQuery.name = this.formLabelAlign.name
       modifyAllQuery.basis_number = this.formLabelAlign.basisinfo.basis_number
@@ -1191,7 +1171,6 @@ export default {
       modifyAllQuery.id = this.outId
       modifyAllQuery.parkid = this.parkid
       modifyAllQuery.end_time = this.formLabelAlign.brakeinfo.end_time
-
       //前端验证
       // 基础设置左边部分判断
       this.$refs.ruleFormBasisLeft.validate((valid) => {
@@ -1219,16 +1198,13 @@ export default {
           this.validataformName3 = false
         }
       })
-      // console.log(this.car_yellow1, 'this.car_yellow1 === 1this.car_yellow1 === 1')
       //开闸管理右部分判断
       if (this.car_yellow1 === 1) {
         //黄牌车指定通道，如果为是，则验证是否选择门岗
         if (this.ChoiceDoor_value) {
-          // alert('不为空')
           this.mengangToast = ''
           this.validataformName8 = true
         } else {
-          // alert('为空')
           this.validataformName8 = false
           this.mengangToast = '请选择门岗'
         }
@@ -1258,9 +1234,7 @@ export default {
       })
       //收费管理右边最高收费金额验证
       if (this.formLabelAlign.priceinfo.single_max === 1) {
-
         if (!this.formLabelAlign.priceinfo.single_max_price) {
-          // alert('kkk')
           this.validataformName7 = false
           this.HightestToast = '请输入最高收费金额'
         } else if (this.formLabelAlign.priceinfo.single_max_price === '0' || this.formLabelAlign.priceinfo.single_max_price === '0.' || this.formLabelAlign.priceinfo.single_max_price === '0.0' || this.formLabelAlign.priceinfo.single_max_price === '0.00') {
@@ -1272,7 +1246,6 @@ export default {
           this.HightestToast = ''
         }
       } else {
-
         this.validataformName7 = true
       }
       //收费设置右边判断
@@ -1393,7 +1366,6 @@ export default {
           }
         })
       }
-      console.log(modifyAllQuery, '参数11')
       setTimeout(() => {
         if (this.validataformName && this.validataformName1 && this.validataformName3 && this.validataformName4 && this.validataformName5
           && this.validataformName6 && this.validataformName7 && this.validataformName8 && this.validataformName9 && this.validataformName10 && this.validataformName11 &&
@@ -1401,13 +1373,6 @@ export default {
         ) {
           //全部验证成功后
           postSetupdateAll(modifyAllQuery).then(resp => {
-            // this.$message({
-            //   message: resp.data,
-            //   type: 'success'
-            // })
-            // this.setInfoHandler()
-            // //修改成功后返回到上一级
-            // this.isExit()
             if(resp.data === '您未修改内容或修改失败'){
               this.$message({
               message: '您未修改任何内容或修改失败',
@@ -1429,18 +1394,14 @@ export default {
     },
     //参数数据回显
     setInfoHandler () {
-      console.log('进入参数请求')
       postSetInfo({ parkid: this.parkid, id: this.inSetId, type: 2 }).then(resp => {
-        console.log(resp.data.brakeinfo, '参数数据回显23323')
         this.outId = resp.data.id
         this.formLabelAlign.basisinfo = resp.data.basisinfo
         this.formLabelAlign.name = resp.data.name
         this.formLabelAlign.brakeinfo = resp.data.brakeinfo
         this.formLabelAlign.ledinfo = resp.data.ledinfo
         this.formLabelAlign.priceinfo = resp.data.priceinfo
-        // console.log(this.formLabelAlign, 'this.formLabelAlign')
         if (resp.data.brakeinfo) {
-          // console.log('kkk')
           if (this.formLabelAlign.brakeinfo.car_yellow === null) {
             return
           } else if (this.formLabelAlign.brakeinfo.car_yellow > 0) {
@@ -1460,7 +1421,6 @@ export default {
         }
       })
     },
-
   }
 }
 </script>
@@ -1469,7 +1429,6 @@ export default {
 /deep/.createJobDialog .el-dialog .el-dialog--center {
   background-color: #f44 !important;
 }
-
 .clearfix:before,
 .clearfix:after {
   display: table;

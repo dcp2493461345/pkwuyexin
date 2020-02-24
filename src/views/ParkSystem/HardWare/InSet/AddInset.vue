@@ -3,7 +3,7 @@
     <div class="card-main">
       <span id="newadd" @click="isExit">返回上一级</span>
     </div>
-    <el-collapse v-model="activeNames" @change="handleChange">
+    <el-collapse v-model="activeNames" >
       <!-- 基础设置 -->
       <el-collapse-item title="基础设置" name="1">
         <!-- 总 -->
@@ -314,7 +314,6 @@
                 </el-select>
               </el-form-item>
               <!-- 长租车,入场时显示屏显示的信息:长租车,入场时显示屏显示的信息:长租车,入场时显示屏显示的信息:长租车,入场时显示屏显示的信息:长租车,入场时显示屏显示的信息: -->
-
               <p class="plabel-class">长租车,入场时显示屏显示的信息:</p>
               <!-- //下拉框 -->
               <div v-for="(item,index) in formLabelAlign.led_number" :key="index+'b'">
@@ -396,7 +395,6 @@
                 <el-input v-model="formLabelAlign.car_rent_day" />
               </el-form-item>
               <el-form-item label="扬声器声音大小(0-10):" prop="sound">
-                <!-- <span>扬声器{{formLabelAlign.sound}}</span> -->
                 <div class="block" style="width: 400px;">
                   <el-slider v-model="formLabelAlign.sound" show-stops :max="10" :step="1"></el-slider>
                 </div>
@@ -761,9 +759,6 @@ export default {
         time_out_price: [
           { validator: checkPrice1, trigger: 'blur' }
         ],
-        // max_price: [
-        //   { validator: checkPrice2, trigger: 'blur' }
-        // ],
         car_rent_price: [
           {
             required: true,
@@ -788,7 +783,6 @@ export default {
       }
     }
   },
-  computed: {},
   watch: {
     // 车位总数
     'formLabelAlign.basis_number': {
@@ -805,7 +799,6 @@ export default {
           this.formLabelAlign.basis_number = o
         }
       },
-
     },
     // 同一道口，重复识别车牌间隔时间（秒）
     'formLabelAlign.car_endtime': {
@@ -1018,7 +1011,6 @@ export default {
     })
     //led下拉提示语
     postMonthly({}).then(resp => {
-      // console.log(resp, '列表')
       this.screenConten.car_rent_admission1 = resp.data
     })
     postMonthlyOut({}).then(resp => {
@@ -1035,17 +1027,12 @@ export default {
       this.screenConten.car_no_appearance1 = resp.data
     })
   },
-  mounted () {
-
-  },
   methods: {
     //子组件像父组件传值
     isExit () {
       this.$emit('isShowCardFunc1', this.isShowCard2)
     },
-    handleChange (val) {
-      // console.log(val)
-    },
+    //选择门岗时提示语消失
     hanPoid_DoorType (id) {
       this.mengangToast = ''
       this.formLabelAlign.car_yellow = id
@@ -1060,6 +1047,7 @@ export default {
       this.formLabelAlign.car_centons = ''
       this.myselfToast = ''
     },
+    //自定义提示语失去焦点
     myselfBlur () {
       if (this.formLabelAlign.car_centons === '') {
         this.myselfToast = '请输入自定义提示语'
@@ -1114,6 +1102,7 @@ export default {
         this.$refs[`car_no_appearance1${i}`][0].innerHTML = ''
       }
     },
+    //点击确认
     addSetting () {
       this.formLabelAlign.car_rent_admission = this.car_rent_admission1.join(',')
       this.formLabelAlign.car_stop_admission = this.car_stop_admission1.join(',')
@@ -1132,10 +1121,8 @@ export default {
       this.formLabelAlign.car_time = this.formLabelAlign.car_time
       this.formLabelAlign.parkid = this.parkid
       // 基础设置左边部分判断
-      // alert('验证')
       this.$refs.ruleFormBasisLeft.validate((valid) => {
         if (valid) {
-          // alert('submit!');
           this.validataformName = true
         } else {
           this.validataformName = false
@@ -1326,33 +1313,12 @@ export default {
           }
         })
       }
-      console.log({
-        'validataformName': this.validataformName,
-        'validataformName1': this.validataformName1,
-        'validataformName3': this.validataformName3,
-        'validataformName4': this.validataformName4,
-        'validataformName5': this.validataformName5,
-        'validataformName6': this.validataformName6,
-        'validataformName7': this.validataformName7,
-        'validataformName8': this.validataformName8,
-        'validataformName9': this.validataformName9,
-        'validataformName10': this.validataformName10,
-        'validataformName11': this.validataformName11,
-        'validataLed1': this.validataLed1,
-        'validataLed2': this.validataLed2,
-        'validataLed3': this.validataLed3,
-        'validataLed4': this.validataLed4,
-        'validataLed5': this.validataLed5,
-        'validataLed6': this.validataLed6,
-      }
-      )
       if (this.validataformName && this.validataformName1 && this.validataformName3 && this.validataformName4 && this.validataformName5
         && this.validataformName6 && this.validataformName7 && this.validataformName8 && this.validataformName9 && this.validataformName10 && this.validataformName11 &&
         this.validataLed1 && this.validataLed2 && this.validataLed3 && this.validataLed4 && this.validataLed5 && this.validataLed6
       ) {
         //所有验证成功，访问接口
         postSettingadd(this.formLabelAlign).then(resp => {
-          // console.log(resp, 'postSettingadd')
           this.$message({
             message: resp.data,
             type: 'success'
@@ -1361,11 +1327,8 @@ export default {
             this.disableShow = true
             this.isExit()
           }
-          // localStorage.setItem('setParamState', 1)
         })
       }
-      // console.log(this.formLabelAlign, 'formLabelAlignformLabelAlignformLabelAlign')
-
     }
   }
 }

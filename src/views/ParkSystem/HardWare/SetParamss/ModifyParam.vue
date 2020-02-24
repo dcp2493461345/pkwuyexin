@@ -11,7 +11,7 @@
 
     <div class="hard-setparamClass">
       <div class="setparam-container">
-        <el-collapse v-model="activeNames" @change="handleChange" :disabled="true">
+        <el-collapse v-model="activeNames"  :disabled="true">
           <!-- 基础设置 -->
           <el-collapse-item title="基础设置" name="1">
             <!-- 总 -->
@@ -391,19 +391,6 @@
                   <!-- //下拉框 -->
                   <div v-for="(item,index) in formLabelAlign.ledinfo.led_number" :key="index+'b'">
                     <span class="hang-class">第{{chineseNum[index]}}行</span>
-                    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++ -->
-                    <!-- <el-autocomplete
-                      popper-class="my-autocomplete"
-                      v-model="car_rent_admission1[index]"
-                      :fetch-suggestions="querySearch"
-                      placeholder="请输入或选择内容"
-                      @select="handleSelect"
-                    >
-                      <i class="el-icon-edit el-input__icon" slot="suffix" @click="handleIconClick"></i>
-                      <template slot-scope="{ item }">
-                        <div class="name">{{ item.value }}</div>
-                      </template>
-                    </el-autocomplete>-->
                     <el-select
                       placeholder
                       :filterable="true"
@@ -412,7 +399,6 @@
                       class="selectClass"
                       reserve-keyword
                       @change="cc(index)"
-                      @blur="ccBlur(index)"
                     >
                       <div v-if="selectShow">
                         <el-option
@@ -797,7 +783,6 @@ export default {
           value: 6,
           label: 6
         }
-
       ],
       //显示屏下拉框的数据
       screenConten: {
@@ -865,11 +850,6 @@ export default {
       userInfo: {},//localStorage的userInfo
       outId: null,//最外层Id
       inID: null,//内层ID
-      //修改全部时需要的参数
-      // priceQuery: {},
-      // ledQuery: {},
-      // brakeQuery: {},
-      // basisQuery: {}
       //基础设置左边验证
       rules: {//rules验证
         basis_name: [
@@ -938,9 +918,6 @@ export default {
         time_out_price: [
           { validator: checkPrice1, trigger: 'blur' }
         ],
-        // max_price: [
-        //   { validator: checkPrice2, trigger: 'blur' }
-        // ],
       },
       rules4: {
         car_rent_price: [
@@ -971,7 +948,6 @@ export default {
       }
     }
   },
-  computed: {},
   watch: {
     // 电话号码不能输入汉字
     'formLabelAlign.basisinfo.basis_phone': {
@@ -1207,7 +1183,6 @@ export default {
     this.getDoorList()
     // 按钮权限判定
     postSelect_button({ Communityid, uid, auth_id }).then(resp => {
-      console.log(resp, 'resp按钮权限')
       if (resp.code === 200) {
         this.buttonLists = resp.data
         var btnList = this.buttonLists
@@ -1233,7 +1208,6 @@ export default {
   },
   mounted () {
     //显示屏下拉提示语
-    //led下拉提示语
     postMonthly({}).then(resp => {
       this.screenConten.car_rent_admission1 = resp.data
     })
@@ -1251,20 +1225,16 @@ export default {
       this.screenConten.car_no_appearance1 = resp.data
     })
   },
-
   methods: {
     //参数数据回显
     setInfoHandler () {
       postSetInfo({ parkid: this.parkid, type: 1 }).then(resp => {
-        console.log(resp.data.priceinfo, 'resp参数数据回显')
         this.outId = resp.data.id
         this.formLabelAlign.basisinfo = resp.data.basisinfo
         this.formLabelAlign.brakeinfo = resp.data.brakeinfo
         this.formLabelAlign.ledinfo = resp.data.ledinfo
         this.formLabelAlign.priceinfo = resp.data.priceinfo
-        // console.log(this.formLabelAlign.brakeinfo.car_yellow, typeof (this.formLabelAlign.brakeinfo.car_yellow), 'this.formLabelAlign')
         if (resp.data.brakeinfo) {
-          // console.log('kkk')
           if (this.formLabelAlign.brakeinfo.car_yellow === null) {
             return
           } else if (this.formLabelAlign.brakeinfo.car_yellow > 0) {
@@ -1293,7 +1263,6 @@ export default {
     },
     //门岗选择为否时，清除选择的数据
     mengangChange (num) {
-      console.log(num, 'mengangChange')
       if (num === 0) {
         this.formLabelAlign.brakeinfo.car_yellow = num
       }
@@ -1329,13 +1298,8 @@ export default {
       this.formLabelAlign.priceinfo.single_max_price = ''
       this.HightestToast = ''
     },
-    ccBlur (index) {
-      console.log(this.car_rent_admission1[index], 'gggggg')
-      // this.car_rent_admission1[index] = 
-    },
     createFilter (queryString) {
       return (restaurant) => {
-        // console.log(restaurant,'restaurant')
         return (restaurant.name.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
       };
     },
@@ -1344,13 +1308,6 @@ export default {
       var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
       // 调用 callback 返回建议列表的数据
       cb(results);
-    },
-    handleIconClick (ev) {
-      console.log(ev);
-    },
-    handleSelect (index) {
-      console.log(this.car_rent_admission1[index], '1111111')
-
     },
     cc (index) {
       this.$refs[`car_rent_admission1${index}`][0].innerHTML = ''
@@ -1381,14 +1338,11 @@ export default {
         this.$refs[`car_no_appearance1${i}`][0].innerHTML = ''
       }
     },
-    handleChange (val) {
-      console.log(val)
-    },
+    //选择门岗类型
     hanPoid_DoorType (id) {
       this.mengangToast = ''
       this.formLabelAlign.brakeinfo.car_yellow = id
     },
-
     //修改全部
     modifyAllHandler () {
       this.isActive1 = false
@@ -1396,7 +1350,6 @@ export default {
       this.isActive3 = false
       this.isActive4 = false
       this.isActiveAll = true
-      // alert('修改全部')
       //折叠栏全部展开
       this.activeNames = ['1', '2', '3', '4']
       //四项全部可编辑
@@ -1427,7 +1380,6 @@ export default {
       //确认按钮出现
       this.querenVisible = true
       this.modifyNum = 1
-
     },
     //修改开闸管理
     modifybrake () {
@@ -1476,18 +1428,12 @@ export default {
     },
     // 点击确认
     addSetting () {
-
-      // alert(this.loadingQueren)
-      // this.$forceUpdate()
       //前端验证
-      // this.setInfoHandler()
       // 基础设置左边部分判断
       this.$refs.ruleFormBasisLeft.validate((valid) => {
         if (valid) {
-          // alert('正确')
           this.validataformName = true
         } else {
-          // alert('错误')
           this.validataformName = false
         }
       })
@@ -1507,16 +1453,13 @@ export default {
           this.validataformName3 = false
         }
       })
-      // console.log(this.car_yellow1, 'this.car_yellow1 === 1this.car_yellow1 === 1')
       //开闸管理右部分判断
       if (this.car_yellow1 === 1) {
         //黄牌车指定通道，如果为是，则验证是否选择门岗
         if (this.ChoiceDoor_value) {
-          // alert('不为空')
           this.mengangToast = ''
           this.validataformName8 = true
         } else {
-          // alert('为空')
           this.validataformName8 = false
           this.mengangToast = '请选择门岗'
         }
@@ -1546,7 +1489,6 @@ export default {
       })
       //收费管理右边最高收费金额验证
       if (this.formLabelAlign.priceinfo.single_max === 1) {
-
         if (!this.formLabelAlign.priceinfo.single_max_price) {
           // alert('kkk')
           this.validataformName7 = false
@@ -1560,7 +1502,6 @@ export default {
           this.HightestToast = ''
         }
       } else {
-
         this.validataformName7 = true
       }
       //收费设置右边判断
@@ -1599,7 +1540,6 @@ export default {
       //显示屏设置的验证显示屏设置的验证显示屏设置的验证显示屏设置的验证(提示语设置)
       if (this.formLabelAlign.ledinfo.led_number) {
         const len = this.formLabelAlign.ledinfo.led_number
-        console.log(this.car_rent_admission1, 'this.car_rent_admission1')
         // 深克隆数组
         const newArrCar_rent_admission1 = JSON.parse(JSON.stringify(this.car_rent_admission1))
         const newArrCar_stop_admission1 = JSON.parse(JSON.stringify(this.car_stop_admission1))
@@ -1616,7 +1556,6 @@ export default {
         const newArr2Car_no_appearance1 = newArrCar_no_appearance1.splice(0, len)
         // 长租车,入场时显示屏显示的信息:
         newArr2Car_rent_admission1.forEach((item, i) => {
-
           this.formLabelAlign.ledinfo.car_rent_admission = newArr2Car_rent_admission1.join(',')
           if (item === "") {
             this.validataLed1 = false
@@ -1628,7 +1567,6 @@ export default {
         })
         //临停车,入场时显示屏显示的信息
         newArr2Car_stop_admission1.forEach((item, i) => {
-
           this.formLabelAlign.ledinfo.car_stop_admission = newArr2Car_stop_admission1.join(',')
           if (item === "") {
             this.validataLed2 = false
@@ -1640,7 +1578,6 @@ export default {
         })
         //无车时,入口显示屏显示的内容信息:
         newArr2Car_no_admission1.forEach((item, i) => {
-
           this.formLabelAlign.ledinfo.car_no_admission = newArr2Car_no_admission1.join(',')
           if (item === "") {
             this.validataLed3 = false
@@ -1652,7 +1589,6 @@ export default {
         })
         // 长租车,出场时显示屏显示的信息:
         newArr2Car_rent_appearance1.forEach((item, i) => {
-
           this.formLabelAlign.ledinfo.car_rent_appearance = newArr2Car_rent_appearance1.join(',')
           if (item === "") {
             this.validataLed4 = false
@@ -1664,7 +1600,6 @@ export default {
         })
         // 临停车,出场时显示屏显示的信息:
         newArr2Car_stop_appearance1.forEach((item, i) => {
-
           this.formLabelAlign.ledinfo.car_stop_appearance = newArr2Car_stop_appearance1.join(',')
           if (item === "") {
             this.validataLed5 = false
@@ -1676,7 +1611,6 @@ export default {
         })
         // 无车时,出口显示屏显示的内容信息
         newArr2Car_no_appearance1.forEach((item, i) => {
-
           this.formLabelAlign.ledinfo.car_no_appearance = newArr2Car_no_appearance1.join(',')
           if (item === "") {
             this.validataLed6 = false
@@ -1687,10 +1621,8 @@ export default {
           }
         })
       }
-
       //1(修改基础设置)
       if (this.modifyNum === 1) {
-
         var basisQuery = {}//传递给后端的参数
         basisQuery.basis_name = this.formLabelAlign.basisinfo.basis_name
         basisQuery.basis_phone = this.formLabelAlign.basisinfo.basis_phone
@@ -1731,7 +1663,6 @@ export default {
         }, 500);
       } else if (this.modifyNum === 2) {
         // 2(开闸管理)
-
         var brakeQuery = {}
         brakeQuery.car_app = this.formLabelAlign.brakeinfo.car_app
         brakeQuery.end_time = this.formLabelAlign.brakeinfo.end_time
@@ -1742,13 +1673,11 @@ export default {
         brakeQuery.car_endtime = this.formLabelAlign.brakeinfo.car_endtime
         brakeQuery.car_double = this.formLabelAlign.brakeinfo.car_double
         brakeQuery.car_yellow = this.formLabelAlign.brakeinfo.car_yellow
-        // basisQuery.car_yellow = this.formLabelAlign.brakeinfo.car_yellow
         brakeQuery.car_police = this.formLabelAlign.brakeinfo.car_police
         brakeQuery.car_wuye = this.formLabelAlign.brakeinfo.car_wuye
         brakeQuery.car_wuye_release = this.formLabelAlign.brakeinfo.car_wuye_release
         brakeQuery.parkid = this.parkid
         brakeQuery.car_centons = this.formLabelAlign.brakeinfo.car_centons
-        console.log(brakeQuery, 'brakeQuery')
         this.brakeQuery = brakeQuery
         setTimeout(() => {
           if (this.validataformName3 && this.validataformName4 && this.validataformName8) {
@@ -1780,9 +1709,7 @@ export default {
           }
         }, 500);
       } else if (this.modifyNum === 3) {
-        // this.loadingQueren = false
         // 3(收费设置)
-        // console.log(this.formLabelAlign, '222222222收费设置222222222222222222222')
         var priceQuery = {}
         priceQuery.car_time = this.formLabelAlign.priceinfo.car_time
         priceQuery.car_price_time = this.formLabelAlign.priceinfo.car_price_time
@@ -1855,7 +1782,6 @@ export default {
             //全部验证成功后
             postSetupdateLed(ledQuery).then(resp => {
               this.loadingQueren = false
-
               if (resp.data = '修改成功') {
                 this.$message({
                   message: resp.data,
@@ -1927,27 +1853,6 @@ export default {
         modifyAllQuery.id = this.outId
         modifyAllQuery.parkid = this.parkid
         modifyAllQuery.end_time = this.formLabelAlign.brakeinfo.end_time
-        // console.log(modifyAllQuery, '修改全部时的参数')
-        //   console.log({
-        //   'validataformName': this.validataformName,
-        //   'validataformName1': this.validataformName1,
-        //   'validataformName3': this.validataformName3,
-        //   'validataformName4': this.validataformName4,
-        //   'validataformName5': this.validataformName5,
-        //   'validataformName6': this.validataformName6,
-        //   'validataformName7': this.validataformName7,
-        //   'validataformName8': this.validataformName8,
-        //   'validataformName9': this.validataformName9,
-        //   'validataformName10': this.validataformName10,
-        //   'validataformName11': this.validataformName11,
-        //   'validataLed1': this.validataLed1,
-        //   'validataLed2': this.validataLed2,
-        //   'validataLed3': this.validataLed3,
-        //   'validataLed4': this.validataLed4,
-        //   'validataLed5': this.validataLed5,
-        //   'validataLed6': this.validataLed6,
-        // }
-        // )
         setTimeout(() => {
           if (this.validataformName && this.validataformName1 && this.validataformName3 && this.validataformName4 && this.validataformName5
             && this.validataformName6 && this.validataformName7 && this.validataformName8 && this.validataformName9 && this.validataformName10 && this.validataformName11 &&

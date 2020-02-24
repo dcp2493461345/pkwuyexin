@@ -40,22 +40,6 @@ const dynamicRoutes = [
       auth_id: 1
     }
   },
-  // {
-  //   path: '/charge',
-  //   component: Layout,
-  //   hidden: true,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'charge',
-  //       component: () => import('@/views/WySystem/Charge/index'),
-  //       meta: {
-  //         title: '物业收费',
-  //         icon: 'wycharge3'
-  //       }
-  //     }
-  //   ]
-  // },
   {
     path: '/car',
     component: Layout,

@@ -1199,7 +1199,7 @@ export default {
   margin-left: 0.25vw;
 }
 /deep/.myfenye {
-  top: 35px;
+  top: 24px;
   .record-data {
     left: 20px;
     bottom: 30px;

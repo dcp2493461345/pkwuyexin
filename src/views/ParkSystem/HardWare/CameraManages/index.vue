@@ -104,7 +104,6 @@
       top="35vh"
       :close-on-click-modal="false"
     >
-      <!-- <p>提示</p> -->
       <div style="font-size:16px;">是否启用该摄像头?</div>
       <span slot="footer" class="dialog-footer">
         <el-button class="quxiao1" style="font-size:14px;" @click="centerDialogVisible1 = false">取 消</el-button>
@@ -121,7 +120,6 @@
       top="35vh"
       :close-on-click-modal="false"
     >
-      <!-- <p>提示</p> -->
       <div style="font-size:16px;">是否禁用该摄像头?</div>
       <span slot="footer" class="dialog-footer">
         <el-button class="quxiao1" style="font-size:14px;" @click="centerDialogVisible4 = false">取 消</el-button>
@@ -489,10 +487,6 @@ export default {
       parkid: null,
       currentPage: null, // 当前页
       doorNameLists: [
-        // {
-        //   'id': 69,
-        //   'door_post_name': '色温若'
-        // }
       ],
       options_In_outLists: [
         {
@@ -536,7 +530,6 @@ export default {
     this.getDOorLists()
     // 按钮权限判定
     postSelect_button({ Communityid, uid, auth_id }).then(resp => {
-      console.log(resp, 'resp按钮权限')
       if (resp.code === 200) {
         this.buttonLists = resp.data
         var btnList = this.buttonLists
@@ -560,9 +553,6 @@ export default {
       }
     })
   },
-  mounted () {
-
-  },
   methods: {
     //门岗列表请求
     getDOorLists () {
@@ -585,9 +575,7 @@ export default {
       this.formModifyContent.camera_door = value
     },
     hanPoid_fenlei (value) {
-      // console.log(value,'hahahh')
       parkcamer_code_xiala({ camera_door: value, parkid: this.parkid }).then(resp => {
-        // console.log(resp, 'hahah')
         this.tableData = resp.data.data
         this.pageInfo.total = resp.data.total
         this.pageInfo.page = resp.data.page
@@ -645,9 +633,7 @@ export default {
         }, 2000)
       } else if (addCamerQuery.door_id && addCamerQuery.camera_name && addCamerQuery.camera_sn && addCamerQuery.camera_host && addCamerQuery.camera_door) {
         //全部验证完成
-        console.log(addCamerQuery, '添加的参数')
         postCamerAdd(addCamerQuery).then(resp => {
-          // console.log(resp, '新增摄像头的response')
           if (resp.data === '设备添加成功') {
             this.$message({
               message: resp.data,
@@ -678,7 +664,6 @@ export default {
     },
     // 点击修改摄像头
     handleEdit (index, row) {
-      console.log(row, 'row')
       // 数据回显
       this.formModifyContent.door_id = row.door_id
       this.formModifyContent.camera_name = row.camera_name
@@ -698,7 +683,6 @@ export default {
       }
       //验证是否选择了门岗
       if (!ModifyCamerQuery.door_id) {
-        // console.log('lll')
         this.modifyToast.doorIdTips = '请选择门岗'
         setTimeout(() => {
           this.modifyToast.doorIdTips = ''
@@ -818,10 +802,8 @@ export default {
     },
     //点击收款码或者查看收款码
     handleQr (index, row) {
-      console.log(row, 'row')
       this.temImgArr = [{}]
       if (row.image === null) {
-        console.log(row, 'row')
         this.fcDialogFormVisible = true
         this.camareId = row.id
         this.hideUpload = false
@@ -841,12 +823,10 @@ export default {
     },
     // 图片事件
     handleRemove (file, fileList) {
-      console.log(fileList, 636)
       this.fileLists = fileList
       this.hideUpload = fileList.length >= this.limitCount
     },
     handleRemove1 (file, fileList) {
-      console.log(fileList, '删除')
       this.flagDele = 2
       this.fileLists1 = fileList
       this.hideUpload1 = fileList.length >= this.limitCount
@@ -865,7 +845,6 @@ export default {
       this.hideUpload = fileList.length >= this.limitCount
     },
     handleChange1 (file, fileList) {
-      console.log(file, fileList, '图片事件')
       this.fileLists1 = fileList
       this.temImgArr = [{ url: fileList[1].url }]
       this.hideUpload1 = fileList.length >= this.limitCount
@@ -881,7 +860,6 @@ export default {
           formData.append('id', id)
           formData.append('parkid', this.parkid)
           postCameraCode(formData).then(resp => {
-            // console.log(resp, 'resp二维码')
             if (resp.data === '修改二维码成功') {
               this.loading = false
               this.fcDialogFormVisible = false
@@ -902,7 +880,6 @@ export default {
       } else {
         //查看收款码
         if (this.fileLists1.length !== 0) {
-          console.log(this.fileLists1, 'this.fileLists1')
           this.loading1 = true
           const id = this.camareId
           const formData = new FormData()
@@ -910,7 +887,6 @@ export default {
           formData.append('parkid', this.parkid)
           formData.append('image', this.fileLists1[1].raw)
           postCameraCode(formData).then(resp => {
-            console.log(resp, 'resp二维码')
             if (resp.data === '修改二维码成功') {
               this.loading = false
               this.fcDialogFormVisible1 = false
@@ -920,7 +896,6 @@ export default {
                 type: 'success'
               })
               this.getCamereList(this.pageInfo.page, 10, this.park_id)
-              // this.$refs.upload1.clearFiles()
             } else if (resp.data === "修改二维码失败") {
               this.loading = false
               this.fcDialogFormVisible1 = false
