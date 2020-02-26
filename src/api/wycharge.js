@@ -55,3 +55,47 @@ export function xiugaixm (data) {
           data: QS.stringify(data)
         })
       }
+    // 押金名称
+    export function namedeposit (data) {
+      return request({
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        url: '/property/Paylist/Pay_Service',
+        method: 'post',
+        data: QS.stringify(data)
+      })
+    }
+  // 房屋信息
+  export function Housing (data) {
+    return request({
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      url: '/property/Paylist/select_list',
+      method: 'post',
+      data: QS.stringify(data)
+    })
+  } 
+    // 添加押金账单
+    export function Addyajin (data) {
+      return request({
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        url: '/property/Paylist/deposit_list',
+        method: 'post',
+        data: QS.stringify(data)
+      })
+    } 
+        // 删除订单
+        export function removedingdan (data) {
+          return request({
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            url: '/property/Paylist/delete_list',
+            method: 'post',
+            data: QS.stringify(data)
+          })
+        } 

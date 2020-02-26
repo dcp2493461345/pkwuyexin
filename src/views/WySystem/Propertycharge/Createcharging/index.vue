@@ -473,7 +473,7 @@ export default {
             this.addcharge.info="1"
         }
           const data =  await addcharge({
-          Communityid:this.uid,
+          Communityid:this.parkid,
           Charge_name:this.addcharge.Charge_name,
           Charge_type:this.addcharge.Charge_type,
           Margin:this.addcharge.Margin,

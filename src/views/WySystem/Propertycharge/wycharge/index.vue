@@ -24,9 +24,9 @@
           <el-table-column prop="housenumber" label="房屋编号" width="250" />
           <el-table-column prop="username" label="房主姓名" width="250" />
           <el-table-column prop="phone" label="联系电话" width="220">
-              <template slot-scope="scope">
-                <span>{{scope.row.phone}}</span>
-                <span @click="gengduo" class="biaoji" v-if="scope.row.user.length>0"> 更多</span>
+            <template slot-scope="scope">
+              <span>{{scope.row.phone}}</span>
+              <span @click="gengduo" class="biaoji" v-if="scope.row.user.length>0">更多</span>
             </template>
           </el-table-column>
           <el-table-column prop="wuye" label="物业费欠费金额（元）" width="280" class="remark" />
@@ -48,25 +48,38 @@
                     <span>押金账单</span>
                   </div>
                   <div class="one__3">
-                    <span>押金收费</span>
+                    <span @click="yajinshouf">押金收费</span>
                   </div>
                 </div>
               </div>
               <div class="xiakuang">
                 <el-table :data="fangwutable" style="width: 100%">
-                  <el-table-column prop="housenumber" label="房屋编号" width="150"></el-table-column>
-                  <el-table-column prop="name" label="房屋面积（㎡）" width="150"></el-table-column>
-                  <el-table-column prop="address" label="物业费单价（元）"></el-table-column>
-                  <el-table-column prop="address" label="押金（元）"></el-table-column>
+                  <el-table-column label="房屋编号" width="160">
+                    <template slot-scope="scope">
+                      <span>{{scope.row.housenumber}}</span>
+                      <span style="margin-left:6px;color:#5FAFE4;">查看住户</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="Housingarea" label="房屋面积（㎡）" width="120"></el-table-column>
+                  <el-table-column prop="Price" label="物业费单价（元）" width="130"></el-table-column>
+                  <el-table-column label="押金（元）">
+                    <template slot-scope="scope">
+                      <span style="color:#FF0000;">{{scope.row.money}}</span>
+                      <span
+                        
+                        style="margin-left:6px;"
+                      >(已退{{scope.row.deposit_money}})</span>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </div>
             </div>
             <div class="one_2">
-               <div class="one__1">
+              <div class="one__1">
                 <div class="one-lyl">其他项目</div>
                 <div class="one-dcp">
                   <div class="one__3">
-                    <span>添加订单</span>
+                    <span @click="addorder">添加订单</span>
                   </div>
                 </div>
               </div>
@@ -75,45 +88,51 @@
                   :data="tableDatadcp"
                   tooltip-effect="dark"
                   style="width: 100%"
-                  @selection-change="handleSelectionChange">
-                  <el-table-column
-                    type="selection"
-                    width="55">
+                  @selection-change="handleSelectionChange"
+                >
+                  <el-table-column type="selection" width="80"></el-table-column>
+                  <el-table-column label="项目" width="140">
+                    <template slot-scope="scope">{{ scope.row.payment_names }}</template>
                   </el-table-column>
-                  <el-table-column
-                    label="日期"
-                    width="120">
-                    <template slot-scope="scope">{{ scope.row.date }}</template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="name"
-                    label="姓名"
-                    width="120">
-                  </el-table-column>
-                  <el-table-column
-                    prop="address"
-                    label="地址"
-                    show-overflow-tooltip>
+                  <el-table-column prop="time" label="日期" width="140"></el-table-column>
+                  <el-table-column prop="paymentPrice" label="金额(元" show-overflow-tooltip></el-table-column>
+                  <el-table-column label="操作" show-overflow-tooltip>
+                     <template slot-scope="scope">
+                    <span style="color:#5FAFE4;cursor:pointer;" @click="removedd(scope.row)">删除</span>
+                    </template>
                   </el-table-column>
                 </el-table>
               </div>
-            <div class="foursy">
-                <span class="balance">余额(元)：<span class="reds">555</span></span>
-                <span class="balance1">应收金额(元)：<span class="reds1">555</span></span>
-                <span class="balance2">实收金额(元)： <input  type="text"></span>
-                <span class="balance3">  <el-checkbox v-model="checkedssss">四舍五入取整</el-checkbox></span>
-            </div>
+              <div class="foursy">
+                <span class="balance">
+                  余额(元)：
+                  <span class="reds">555</span>
+                </span>
+                <span class="balance1">
+                  应收金额(元)：
+                  <span class="reds1">555</span>
+                </span>
+                <span class="balance2">
+                  实收金额(元)：
+                  <input type="text" />
+                </span>
+                <span class="balance3">
+                  <el-checkbox v-model="checkedssss">四舍五入取整</el-checkbox>
+                </span>
+              </div>
             </div>
           </div>
           <div class="two">
             <div class="two_1">
-                <div class="one__1">
+              <div class="one__1">
                 <div class="one-lyl">物业费</div>
               </div>
               <div class="two__2">
                 <div class="dcp_two_1">
                   <span class="daoqi">物业费到期时间</span>
-                <span class="balance4">  <el-checkbox v-model="checkedssss">当前欠费(元)：</el-checkbox></span>
+                  <span class="balance4">
+                    <el-checkbox v-model="checkedssss">当前欠费(元)：</el-checkbox>
+                  </span>
                 </div>
                 <div class="dcp_two_2">
                   <span class="one">2020-05-12</span>
@@ -121,73 +140,100 @@
                 </div>
                 <div class="dcp_two_3">
                   <span class="one">预交(月)：</span>
-                  <input type="text">
+                  <input type="text" />
                   <div class="two">
                     <span class="three-1">缴费11个月，补交1个月，预交10个月，缴费后物业到期时间为2020-05-01</span>
                   </div>
                 </div>
                 <div class="dcp_two_4">
-                    <span class="lyl_1"><el-checkbox v-model="checkedssss">按天收取费用</el-checkbox></span>
-                    <span class="lyl_2">预交(天)：</span>
-                    <input class="lyl_3" type="text">
-                    <span class="lyl_4">收费金额(元)：</span>
-                    <input class="lyl_5" type="text">
+                  <span class="lyl_1">
+                    <el-checkbox v-model="checkedssss">按天收取费用</el-checkbox>
+                  </span>
+                  <span class="lyl_2">预交(天)：</span>
+                  <input class="lyl_3" type="text" />
+                  <span class="lyl_4">收费金额(元)：</span>
+                  <input class="lyl_5" type="text" />
                 </div>
                 <div class="dcp_two_5">
                   <span class="ten_1" v-if="tianxie">缴费x天，缴费后物业到期时间为2020-05-06</span>
-                  <span class="ten_2"  v-if="!tianxie">请输入预交天数</span>
-                  <span class="ten_3" >请输入收费金额</span>
+                  <span class="ten_2" v-if="!tianxie">请输入预交天数</span>
+                  <span class="ten_3">请输入收费金额</span>
                 </div>
               </div>
-                <div class="foursy">
-                <span class="balance">余额(元)：<span class="reds">555</span></span>
-                <span class="balance1">应收金额(元)：<span class="reds1">555</span></span>
-                <span class="balance2">实收金额(元)：<input  type="text"></span>
-                <span class="balance3">  <el-checkbox v-model="checkedssss">四舍五入取整</el-checkbox></span>
-            </div>
+              <div class="foursy">
+                <span class="balance">
+                  余额(元)：
+                  <span class="reds">555</span>
+                </span>
+                <span class="balance1">
+                  应收金额(元)：
+                  <span class="reds1">555</span>
+                </span>
+                <span class="balance2">
+                  实收金额(元)：
+                  <input type="text" />
+                </span>
+                <span class="balance3">
+                  <el-checkbox v-model="checkedssss">四舍五入取整</el-checkbox>
+                </span>
+              </div>
             </div>
             <div class="two_2">
-                <div class="one__1">
+              <div class="one__1">
                 <div class="one-lyl">车位管理/长租费</div>
               </div>
-              <div class="two_2_one">
-
-              </div>
+              <div class="two_2_one"></div>
               <div class="two_2_two">
-                <span class="balance1">应收金额(元)：<span class="reds1">555</span></span>
-                 <span class="balance2">实收金额(元)：<input  type="text"></span>
+                <span class="balance1">
+                  应收金额(元)：
+                  <span class="reds1">555</span>
+                </span>
+                <span class="balance2">
+                  实收金额(元)：
+                  <input type="text" />
+                </span>
               </div>
             </div>
           </div>
           <div class="three">
-             <div class="one__1">
-                <div class="one-lyl">收费明细</div>
-                 <div class="one-dcp">
-                  <div class="one__3">
-                    <span>个人账单</span>
-                  </div>
+            <div class="one__1">
+              <div class="one-lyl">收费明细</div>
+              <div class="one-dcp">
+                <div class="one__3">
+                  <span>个人账单</span>
                 </div>
               </div>
-                <div class="three_one">
-                </div>
-                <div class="three_two">
-                  <div class="three_two_one">合计：<span>12123154</span> (元)</div>
-                  <div class="three_two_two">
-                      <el-radio v-model="radio" label="1"><svg-icon icon-class="weixin" /></el-radio>
-                      <el-radio v-model="radio" label="2"><svg-icon icon-class="zhifubao" /></el-radio>
-                      <el-radio v-model="radio" label="3"><svg-icon icon-class="xianjin" /></el-radio>
-                      <el-radio v-model="radio" label="4"><svg-icon icon-class="yinghangka" /></el-radio>
-                  </div>
-                  <div class="three_two_four">
-                    <span class="three_dcp_one">微信</span>
-                    <span class="three_dcp_two">支付宝</span>
-                    <span class="three_dcp_three">现金</span>
-                    <span class="three_dcp_four">银行卡</span>
-                  </div>
-                  <div  class="three_two_three">
-                 <span class="three__one">确认收费</span>
-                  </div>
-                </div>
+            </div>
+            <div class="three_one"></div>
+            <div class="three_two">
+              <div class="three_two_one">
+                合计：
+                <span>12123154</span> (元)
+              </div>
+              <div class="three_two_two">
+                <el-radio v-model="radio" label="1">
+                  <svg-icon icon-class="weixin" />
+                </el-radio>
+                <el-radio v-model="radio" label="2">
+                  <svg-icon icon-class="zhifubao" />
+                </el-radio>
+                <el-radio v-model="radio" label="3">
+                  <svg-icon icon-class="xianjin" />
+                </el-radio>
+                <el-radio v-model="radio" label="4">
+                  <svg-icon icon-class="yinghangka" />
+                </el-radio>
+              </div>
+              <div class="three_two_four">
+                <span class="three_dcp_one">微信</span>
+                <span class="three_dcp_two">支付宝</span>
+                <span class="three_dcp_three">现金</span>
+                <span class="three_dcp_four">银行卡</span>
+              </div>
+              <div class="three_two_three">
+                <span class="three__one">确认收费</span>
+              </div>
+            </div>
           </div>
         </div>
       </el-card>
@@ -215,247 +261,7 @@
         />
       </div>
     </div>
-
-    <!-- 修改 -->
-    <el-dialog
-      title="修改历史停车记录"
-      :visible.sync="Modification"
-      :append-to-body="true"
-      center
-      class="specialvehicles"
-      top="35vh"
-      :close-on-click-modal="false"
-      width="500px"
-     >
-      <el-form
-        ref="addCartype"
-        :label-position="labelPosition"
-        label-width="100px"
-        :model="Modificationcar"
-        class="el-myclass"
-        hide-required-asterisk
-      >
-        <el-form-item label="优惠金额(元):">
-          <el-input
-            v-model="Modificationcar.price_discount"
-            autocomplete="off"
-            @keydown.native.enter="affirm"
-          />
-          <span class="units">元</span>
-        </el-form-item>
-        <div class="yanzheng">
-          <div v-show="yzheng10">优惠金额不能为空</div>
-        </div>
-        <el-form-item label="优惠理由:" class="input_two">
-          <el-input
-            v-model="Modificationcar.centons"
-            autocomplete="off"
-            class="input textarea"
-            rows="4"
-            type="textarea"
-            @keydown.native.enter="affirm"
-          />
-        </el-form-item>
-      </el-form>
-      <div class="footer-class">
-        <span @click="affirm">确认</span>
-      </div>
-    </el-dialog>
-    <!-- 查看详情 -->
-    <el-dialog
-      title="查看详情"
-      :visible.sync="remindercar"
-      :append-to-body="true"
-      center
-      class="reminder"
-      top="10vh"
-      :close-on-click-modal="false"
-      width="800px"
-     >
-      <div class="box">
-        <div class="box-one">
-          <el-form
-            :label-position="labelPosition"
-            label-width="74px"
-            :model="particulars"
-            class="el-myclass"
-            hide-required-asterisk
-          >
-            <el-form-item label="订单号:">
-              <el-input
-                v-model="particulars.order_sn"
-                autofocus
-                disabled
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-            <el-form-item label="车牌号:">
-              <el-input
-                v-model="particulars.car_number"
-                autofocus
-                @keydown.native.enter="onOfferTap"
-                disabled
-              />
-            </el-form-item>
-            <el-form-item label="入口:">
-              <el-input
-                disabled
-                v-model="particulars.door_into_name"
-                autofocus
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-            <el-form-item label="入场时间:">
-              <el-input
-                disabled
-                v-model="particulars.star_time"
-                autofocus
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-            <el-form-item label="入场图片:">
-              <img :src="'http://aim.txsqtech.com/'+particulars.into_image" />
-            </el-form-item>
-            <el-form-item label="停车时长:">
-              <el-input
-                disabled
-                v-model="particulars.car_stay"
-                autofocus
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-            <el-form-item label="应收金额:">
-              <el-input
-                v-model="particulars.price"
-                disabled
-                autofocus
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-            <el-form-item label="收费员:">
-              <el-input
-                disabled
-                v-model="particulars.user_price"
-                autofocus
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-            <div class="reveal">入口显示屏内容</div>
-            <el-form-item label="第一排:">
-              <el-input
-                disabled
-                v-model="particulars.led_into"
-                autofocus
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-            <el-form-item label="第二排:">
-              <el-input
-                disabled
-                v-model="particulars.led_into"
-                autofocus
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="box-two">
-          <el-form
-            :label-position="labelPosition"
-            label-width="74px"
-            :model="Appearance"
-            class="el-myclass"
-            hide-required-asterisk
-          >
-            <el-form-item label="是否长租">
-              <el-radio-group v-model="Appearance.is_long_rent" disabled>
-                <el-radio :label="1">否</el-radio>
-                <el-radio :label="2">是</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="电话号码:">
-              <el-input
-                disabled
-                v-model="Appearance.phone"
-                autofocus
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-            <el-form-item label="出口:">
-              <el-input
-                disabled
-                v-model="Appearance.door_out_name"
-                autofocus
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-            <el-form-item label="出场时间:">
-              <el-input
-                v-model="Appearance.end_time"
-                disabled
-                autofocus
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-            <el-form-item label="出场图片:">
-              <img :src="'http://aim.txsqtech.com/'+Appearance.out_image" />
-            </el-form-item>
-            <el-form-item label="优惠金额:">
-              <el-input
-                disabled
-                v-model="Appearance.price_discount"
-                autofocus
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-            <el-form-item label="收费方式:">
-              <el-input
-                disabled
-                v-if="Appearance.is_pay===1"
-                autofocus
-                @keydown.native.enter="onOfferTap"
-                value="支付宝"
-              />
-              <el-input
-                disabled
-                v-if="Appearance.is_pay===2"
-                autofocus
-                @keydown.native.enter="onOfferTap"
-                value="微信"
-              />
-              <el-input
-                disabled
-                v-if="Appearance.is_pay===3"
-                autofocus
-                @keydown.native.enter="onOfferTap"
-                value="现金"
-              />
-            </el-form-item>
-            <div class="reveals">出口显示屏内容</div>
-            <el-form-item label="第一排:">
-              <el-input
-                v-model="Appearance.led_out"
-                disabled
-                autofocus
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-            <el-form-item label="第二排:">
-              <el-input
-                v-model="Appearance.led_out"
-                disabled
-                autofocus
-                @keydown.native.enter="onOfferTap"
-              />
-            </el-form-item>
-          </el-form>
-        </div>
-      </div>
-      <div class="footer-class">
-        <span @click="onOfferTap">确认</span>
-      </div>
-    </el-dialog>
-    <!-- 操作记录 -->
+    <!-- 收费列表更多 -->
     <el-dialog
       title="更多"
       :visible.sync="operationnote"
@@ -465,7 +271,7 @@
       top="35vh"
       :close-on-click-modal="false"
       width="450px"
-     >
+    >
       <el-form
         :label-position="labelPosition"
         label-width="110px"
@@ -497,6 +303,189 @@
         <span @click="operate">确认</span>
       </div>
     </el-dialog>
+    <!-- 押金收费 -->
+    <el-dialog
+      title="押金收费"
+      :visible.sync="operationnotees"
+      :append-to-body="true"
+      center
+      class="operationnotees"
+      top="35vh"
+      :close-on-click-modal="false"
+      width="450px"
+     >
+      <div class="box_one_1">
+        <div v-for="(item,index) in certificate" :key="index" class="my-form-item">
+          <div>
+            <div class="main-inp">
+              <span class="label-name3 label-left">押金名称：</span>
+              <!-- <input v-model="item.carport" @input="changcar" /> -->
+              <el-select v-model="item.Feesid" placeholder="请选择" @change="changetype(index)">
+                <el-option
+                  :label="items.Charge_name"
+                  v-for="(items ,indexs) in yajings"
+                  :value="items.Feesid"
+                  :key="indexs"
+                ></el-option>
+              </el-select>
+              <span class="add-icon" @click="addNewItemss" v-if="index==0">
+                <i class="el-icon-plus"></i>
+              </span>
+              <span class="add-icon" @click="deleteThisItemss(index)" v-if="index!=0">
+                <i class="el-icon-close"></i>
+              </span>
+            </div>
+            <div class="yanzheng">
+              <div v-if="shows3">请选择押金名称</div>
+            </div>
+            <div class="main-inp">
+              <span v-if="item.type===1" class="label-name3 label-left">价格：</span>
+              <span v-if="item.type===2" class="label-name3 label-left">单价：</span>
+              <input type="text" v-model="item.price" oninput="value=value.replace(/[^\d]/g,'')" />
+              <!-- <input v-model="item.longtime" /> -->
+              <span v-if="item.type===1" class="yuan">元</span>
+              <span v-if="item.type===2" class="yuan">元/个</span>
+            </div>
+            <div class="yanzheng">
+              <div v-if="shows3">请选择押金名称</div>
+            </div>
+            <div class="main-inp" v-if="item.type===2">
+              <span class="label-name3 label-left">数量：</span>
+              <input type="text" v-model="item.month" oninput="value=value.replace(/[^\d]/g,'')" />
+            </div>
+            <div class="yanzheng" v-if="item.type===2">
+              <div v-if="shows3">请选择押金名称</div>
+            </div>
+            <div class="main-inp1">
+              <span class="label-name3 label-left lable_top">备注：</span>
+              <el-input
+                v-model="item.centon"
+                @keydown.native.enter="submit"
+                autocomplete="off"
+                class="input textarea"
+                rows="4"
+                type="textarea"
+              ></el-input>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="main_inpdcp">
+        <div class="three_two_one">
+          合计：
+          <span style="color:#FF0000;">{{ pricess }}</span> (元)
+        </div>
+        <div class="three_two_two">
+          <el-radio v-model="radioes" label="1">
+            <svg-icon icon-class="weixin" />
+          </el-radio>
+          <el-radio v-model="radioes" label="2">
+            <svg-icon icon-class="zhifubao" />
+          </el-radio>
+          <el-radio v-model="radioes" label="3">
+            <svg-icon icon-class="xianjin" />
+          </el-radio>
+          <el-radio v-model="radioes" label="4">
+            <svg-icon icon-class="yinghangka" />
+          </el-radio>
+        </div>
+        <div class="three_two_four">
+          <span class="three_dcp_one">微信</span>
+          <span class="three_dcp_two">支付宝</span>
+          <span class="three_dcp_three">现金</span>
+          <span class="three_dcp_four">银行卡</span>
+        </div>
+        <div class="three_two_three">
+          <span class="three__one" @click="sumbityajin">确认收费</span>
+        </div>
+      </div>
+    </el-dialog>
+    <!-- 添加订单 -->
+    <el-dialog
+      title="添加订单"
+      :visible.sync="Addtheorder"
+      :append-to-body="true"
+      center
+      class="operationnotees"
+      top="35vh"
+      :close-on-click-modal="false"
+      width="450px"
+    >
+      <div class="box_one_1">
+        <div v-for="(item,index) in addorders" :key="index" class="my-form-item">
+          <div>
+            <div class="main-inp">
+              <span class="label-name3 label-left">订单名称：</span>
+              <!-- <input v-model="item.carport" @input="changcar" /> -->
+               <el-select v-model="item.Feesid" placeholder="请选择" @change="changetypes(index)">
+                <el-option
+                  :label="items.Charge_name"
+                  v-for="(items ,indexs) in dingdanlist"
+                  :value="items.Feesid"
+                  :key="indexs"
+                ></el-option>
+              </el-select>
+              <span class="add-icon" @click="addNewItemss1" v-if="index==0">
+                <i class="el-icon-plus"></i>
+              </span>
+              <span class="add-icon" @click="deleteThisItemss1(index)" v-if="index!=0">
+                <i class="el-icon-close"></i>
+              </span>
+            </div>
+            <div class="yanzheng">
+              <div v-if="shows3">请选择订单名称</div>
+            </div>
+            <div class="main-inp" v-if="item.type===1">
+              <span class="label-name3 label-left">价格：</span>
+              <input type="text" v-model="item.price" oninput="value=value.replace(/[^\d]/g,'')" />
+              <span class="yuan">元</span>
+            </div>
+            <div class="yanzheng"  v-if="item.type===1">
+              <div v-if="shows3">请选择押金名称</div>
+            </div>
+            <div class="main-inp"  v-if="item.type===2">
+              <span class="label-name3 label-left">单价：</span>
+              <input type="text" v-model="item.price" oninput="value=value.replace(/[^\d]/g,'')" />
+              <span class="yuan">元/个</span>
+            </div>
+            <div class="yanzheng"  v-if="item.type===2">
+              <div v-if="shows3">请选择押金名称</div>
+            </div>
+            <div class="main-inp"   v-if="item.type===5">
+              <span class="label-name3 label-left">周期：</span>
+              <input type="text" v-model="item.price" oninput="value=value.replace(/[^\d]/g,'')" />
+              <span class="yuan">年</span>
+            </div>
+            <div class="yanzheng"   v-if="item.type===5">
+              <div v-if="shows3">请选择押金名称</div>
+            </div>
+            <div class="main-inp"   v-if="item.type===2">
+              <span class="label-name3 label-left">数量：</span>
+              <input type="text" v-model="item.month" oninput="value=value.replace(/[^\d]/g,'')" />
+            </div>
+            <div class="yanzheng"   v-if="item.type===2">
+              <div v-if="shows3">请选择押金名称</div>
+            </div>
+            <div class="main-inp1">
+              <span class="label-name3 label-left lable_top">备注：</span>
+              <el-input
+                v-model="item.centon"
+                @keydown.native.enter="submit"
+                autocomplete="off"
+                class="input textarea"
+                rows="4"
+                type="textarea"
+              ></el-input>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="main_inpdcp">
+        <div class="three_two_three">
+          <span @click="querentianjia" class="three__one">确认添加</span>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -510,7 +499,7 @@ import {
   discounts,
   searchnewlists
 } from "@/api/parkCar";
-import { shoufeiList } from "@/api/wycharge";
+import { shoufeiList, namedeposit, Housing, Addyajin , removedingdan } from "@/api/wycharge";
 import { postSelect_button } from "@/api/Jurisdiction1";
 import moment from "moment";
 // data数据
@@ -533,6 +522,7 @@ export default {
         ip: ""
       },
       shoufeizhans: false,
+      operationnotees: false,
       //车辆详情
       particulars: {
         order_sn: "",
@@ -606,13 +596,46 @@ export default {
       ckxq: false,
       caozuo: false,
       fangwutable: [],
-      tableDatadcp:[{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+      tableDatadcp: [],
+      checkedssss: false,
+      tianxie: false,
+      certificate: [
+        {
+          Feesid: null,
+          price: null,
+          month: null,
+          centon: null,
+          type: 1,
+          Communityid: null,
+          userHouseId: null,
+          Payment_method: null,
+          uname: null
+        }
+      ],
+      shows3: false,
+      Addtheorder: false,
+      radio: null,
+      userHouseId: null,
+      //押金名称
+      yajings: [],
+      radioes: null, //押金支付方式
+      pricess: 0, //押金支付总价
+      pricess1: 0, //押金支付总价
+      uname: null,
+      shenghuomoney:null,//其他项目余额
+      addorders:[{
+        Feesid:null,
+         Feesid: null,
+          price: null,
+          month: null,
+          centon: null,
+          type: 1,
+          Communityid: null,
+          userHouseId: null,
+          start_time: null,
+          uname: null
       }],
-      checkedssss:false,
-      tianxie:false
+      dingdanlist:[]
     };
   },
   async created() {
@@ -620,6 +643,7 @@ export default {
     const user = JSON.parse(localStorage.getItem("userInfo"));
     this.parkid = user.Communityid;
     this.park_id = user.Communityid;
+    this.uname = String(user.uname);
     // console.log(user.list );
     const userlist = user.list;
     this.parkList();
@@ -641,17 +665,208 @@ export default {
     });
   },
   methods: {
+    changetypes(index){
+      this.dingdanlist.forEach(v => {
+        if (this.addorders[index].Feesid == v.Feesid) {
+          this.addorders[index].price = v.money;
+          this.addorders[index].type = v.type_inate;
+        }
+      });
+    },
+    //删除订单
+    async removedd(row){
+      const data = await removedingdan({pro_id:row.pro_id})
+      console.log(data);
+      if(data.code===200){
+         Message({
+          type: "success",
+          message: "删除成功"
+        });
+         const datas = await Housing({
+        userHouseId: this.userHouseId
+      });
+        datas.msg.shenghuo.data.forEach(v=>{
+         v.time = moment(v.time * 1000).format(
+        "YYYY-MM-DD"
+      );
+      })
+        this.tableDatadcp=datas.msg.shenghuo.data
+      }else{
+           Message.error("删除失败");
+           const datas = await Housing({
+        userHouseId: this.userHouseId
+      });
+      datas.msg.shenghuo.data.forEach(v=>{
+         v.time = moment(v.time * 1000).format(
+        "YYYY-MM-DD"
+      );
+      })
+        this.tableDatadcp=datas.msg.shenghuo.data
+      }
+    },
+    changetype(index) {
+      console.log(123132132123);
+      console.log(this.certificate[index].Feesid);
+      console.log(this.yajings);
+      this.yajings.forEach(v => {
+        if (this.certificate[index].Feesid == v.Feesid) {
+          this.certificate[index].price = v.money;
+          this.certificate[index].type = v.type_inate;
+        }
+      });
+      this.pricess = 0;
+      this.certificate.forEach(v => {
+        this.pricess += v.price;
+      });
+    },
+    //押金名称
+    async yajinmic() {
+      const data = await namedeposit({
+        Communityid: this.parkid,
+        Charge_type: 1
+      });
+      console.log(data);
+      this.yajings = data.msg;
+    },
+    //订单名称
+     async yajinmices() {
+      const data = await namedeposit({
+        Communityid: this.parkid,
+        Charge_type: 2
+      });
+      console.log(data);
+      this.dingdanlist = data.msg;
+    },
+    //添加押金账单提交
+    async sumbityajin() {
+      console.log(this.radioes);
+      this.certificate.forEach(v => {
+        v.Payment_method = String(this.radioes);
+      });
+      console.log(this.certificate);
+      const data = await Addyajin({
+        arr: this.certificate
+      });
+      console.log(data, "66666");
+      if (data.code === 200) {
+        Message({
+          type: "success",
+          message: "提交成功"
+        });
+        this.operationnotees = false;
+      } else {
+        Message.error("提交失败");
+        this.operationnotees = false;
+      }
+    },
+    //添加订单提交
+    querentianjia(){
+      console.log(this.addorders,"1111");
+      
+    },
+    //打开添加订单
+    addorder() {
+      this.Addtheorder = true;
+      this.yajinmices()
+      this.addorders=[{
+        Feesid:null,
+         Feesid: null,
+          price: null,
+          month: null,
+          centon: null,
+          type: 1,
+          Communityid: this.parkid,
+          userHouseId: this.userHouseId,
+          start_time: null,
+          uname: this.uname
+      }]
+    },
+    addNewItemss() {
+      this.certificate.push({
+        Feesid: null,
+        price: null,
+        month: "",
+        centon: "",
+        type: 1,
+        Communityid: this.parkid,
+        userHouseId: this.userHouseId,
+        Payment_method: null,
+        uname: this.uname
+      });
+    },
+
+    deleteThisItemss(index) {
+      this.certificate.splice(index, 1);
+      this.pricess = 0;
+      this.certificate.forEach(v => {
+        this.pricess += v.price;
+      });
+    },
+     addNewItemss1() {
+      this.addorders.push({
+        Feesid: null,
+        price: null,
+        month: "",
+        centon: "",
+        type: 1,
+        Communityid: this.parkid,
+        userHouseId: this.userHouseId,
+        start_time: null,
+        uname: this.uname
+      });
+    },
+    deleteThisItemss1(index) {
+      this.addorders.splice(index, 1);
+      this.pricess1 = 0;
+      this.addorders.forEach(v => {
+        this.pricess1 += v.price;
+      });
+    },
+    //押金收费
+    yajinshouf() {
+      this.operationnotees = true;
+      this.pricess = 0;
+      this.certificate = [
+        {
+          Feesid: null,
+          price: null,
+          month: "",
+          centon: "",
+          type: 1,
+          Communityid: this.parkid,
+          userHouseId: this.userHouseId,
+          Payment_method: null,
+          uname: this.uname
+        }
+      ];
+      this.yajinmic();
+    },
     //收费返回上一级
-    clearss(){
-      this.shoufeizhans=false;
+    clearss() {
+      this.shoufeizhans = false;
     },
     //列表更多
-    gengduo(){
-      this.operationnote=true;
+    gengduo() {
+      this.operationnote = true;
     },
     //收费详情页面
     async shoufei(row) {
       this.shoufeizhans = true;
+      this.userHouseId = row.userHouseId;
+      const data = await Housing({
+        userHouseId: this.userHouseId
+      });
+      console.log(data, "收费详情页面");
+      var arr = [];
+      arr.push(data.msg.fangwu);
+      console.log(arr);
+      this.fangwutable = arr;
+       data.msg.shenghuo.data.forEach(v=>{
+         v.time = moment(v.time * 1000).format(
+        "YYYY-MM-DD"
+      );
+      })
+      this.tableDatadcp=data.msg.shenghuo.data
     },
     operate() {
       this.operationnote = false;
@@ -1686,13 +1901,12 @@ export default {
   color: #ffffff;
 }
 .yanzheng {
-  color: #ff0000;
-  font-size: 12px;
-  margin-left: 102px;
-  width: 300px;
-  line-height: 12px;
-  height: 20px;
-  margin-top: -4px;
+  height: 22px;
+  margin-left: 126px;
+  font-size: 14px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: rgba(255, 0, 0, 1);
 }
 .kuang {
   height: 32px;
@@ -1805,6 +2019,84 @@ export default {
     }
   }
 }
+.operationnotees {
+  /deep/.el-dialog {
+    min-width: 400px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    .el-dialog__header {
+      text-align: left;
+      height: 43px !important;
+      border-bottom: 1px solid #eff2f5;
+      padding: 12px 19px 12px;
+      .el-dialog__title {
+        font-size: 16px !important;
+      }
+      .el-dialog__headerbtn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        padding: 0;
+        background: 0 0;
+        border: none;
+        outline: 0;
+        cursor: pointer;
+        font-size: 16px;
+      }
+    }
+    /deep/.el-dialog__body {
+      text-align: initial;
+      padding: 24px 5px 25px 0px;
+      .el-myclass {
+        padding-left: 34px;
+        height: 65px !important;
+        /deep/ .el-form-item__label {
+          padding: 0 8px 0 0;
+          text-align: left;
+        }
+        /deep/.el-input__inner {
+          // background-color: #f00;
+          width: 266px !important;
+          height: 32px !important;
+          border: 1px solid rgba(210, 210, 210, 1) !important;
+          border-radius: 4px !important;
+          color: #333333;
+          padding: 0px 7px;
+          cursor: default;
+        }
+      }
+    }
+    .footer-class {
+      // background-color: #f00;
+      cursor: pointer;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      margin-top: 101px;
+      span {
+        width: 72px;
+        height: 30px;
+        border-radius: 4px;
+        background-color: #fcb048;
+        border-color: #fcb048;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+      }
+    }
+    .el-form-item {
+      margin-bottom: 0;
+      height: 50px !important;
+    }
+  }
+}
 .shoufeikuang {
   height: 750px;
   width: 100%;
@@ -1821,20 +2113,20 @@ export default {
       width: 100%;
       border: 1px solid rgba(191, 191, 191, 1);
       height: 200px;
-   
-      .xiakuang{
+
+      .xiakuang {
         padding: 8px 12px 10px 12px;
       }
-     
     }
     .one_2 {
       width: 100%;
       border: 1px solid rgba(191, 191, 191, 1);
       height: 520px;
-      .one_2_1{
+      .one_2_1 {
         height: 440px;
-        width:100%;
-        border-bottom:1px solid rgba(238,238,238,1);
+        width: 100%;
+        border-bottom: 1px solid rgba(238, 238, 238, 1);
+        overflow: auto;
       }
     }
   }
@@ -1848,10 +2140,10 @@ export default {
       width: 100%;
       border: 1px solid rgba(191, 191, 191, 1);
       height: 300px;
-      .two__2{
-        width:100%;
-        height:220px;
-        border-bottom:1px solid rgba(238,238,238,1);
+      .two__2 {
+        width: 100%;
+        height: 220px;
+        border-bottom: 1px solid rgba(238, 238, 238, 1);
         padding: 8px 12px 10px 20px;
       }
     }
@@ -1867,362 +2159,592 @@ export default {
     width: 340px;
   }
 }
-   .one__1 {
-        height: 40px;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 1px solid rgba(238, 238, 238, 1);
-        padding: 8px 12px 10px 20px;
-        .one-lyl {
-          width: 120px;
-          height: 15px;
-          font-size: 16px;
-          font-family: Microsoft YaHei;
-          font-weight: 400;
-          color: #333333;
-        }
-         .one-dcp {
-        display: flex;
-        .one__2 {
-          width: 72px;
-          height: 25px;
-          background: rgba(90, 199, 184, 1);
-          border-radius: 4px;
-          cursor: pointer;
-          text-align: center;
-          span {
-            width: 56px;
-            height: 13px;
-            font-size: 14px;
-            font-family: Microsoft YaHei;
-            font-weight: 400;
-            color: rgba(255, 255, 255, 1);
-          }
-        }
-        .one__3 {
-          text-align: center;
-          width: 72px;
-          height: 25px;
-          background: #1FBBA6;
-          border-radius: 4px;
-          cursor: pointer;
-          margin-left: 8px;
-          span {
-            width: 56px;
-            height: 13px;
-            font-size: 14px;
-            font-family: Microsoft YaHei;
-            font-weight: 400;
-            color: rgba(255, 255, 255, 1);
-          }
-        }
-      }
-      }
-      .foursy{
-        padding: 8px 12px 10px 20px;
-          .balance{
-                display: inline-block;
-                  width:136px;
-                  line-height: 13px;
-                  font-size:14px;
-                  font-family:Adobe Heiti Std;
-                  font-weight:normal;
-                  color:rgba(144,147,153,1);
-                  .reds{
-                    font-size:14px;
-                    font-family:Adobe Heiti Std;
-                    font-weight:normal;
-                    color:rgba(51,51,51,1);
-                  }
-              }
-                .balance1{
-                display: inline-block;
-                  width:136px;
-                  line-height: 13px;
-                  font-size:14px;
-                  font-family:Adobe Heiti Std;
-                  font-weight:normal;
-                  color:rgba(144,147,153,1);
-                    .reds1{
-                    font-size:14px;
-                    font-family:Adobe Heiti Std;
-                    font-weight:normal;
-                    color:rgba(255,0,0,1);
-                  }
-              }
-               .balance2{
-                display: inline-block;
-                  width:190px;
-                  line-height: 13px;
-                  font-size:14px;
-                  font-family:Adobe Heiti Std;
-                  font-weight:normal;
-                  color:rgba(144,147,153,1);
-                  input{
-                    width:80px;
-                    color:rgba(255,0,0,1);
-                    text-indent:8px;
-                  }
-              }
-               .balance3{
-                display: inline-block;
-                  width:130px;
-                  line-height: 13px;
-                  font-size:14px;
-                  font-family:Adobe Heiti Std;
-                  font-weight:normal;
-                  color:rgba(144,147,153,1);
-                  /deep/.el-checkbox__label{
-                      font-size:14px;
-                  font-family:Adobe Heiti Std;
-                  font-weight:normal;
-                  color:rgba(144,147,153,1);
-                  }
-              }
-      }
-   .dcp_two_1{
-     margin-top:10px;
-     .daoqi{
-     width:98px;
-      height:12px;
-      font-size:14px;
-      font-family:Microsoft YaHei;
-      font-weight:400;
-      color:rgba(144,147,153,1);
-     }
-        .balance4{
-          margin-left:180px;
-                display: inline-block;
-                  width:136px;
-                  line-height: 13px;
-                  font-size:14px;
-                  font-family:Adobe Heiti Std;
-                  font-weight:normal;
-                  color:rgba(144,147,153,1);
-                  /deep/.el-checkbox__label{
-                      font-size:14px;
-                  font-family:Adobe Heiti Std;
-                  font-weight:normal;
-                  color:rgba(144,147,153,1);
-                  }
-              }
-   }
-   .dcp_two_2{
-     margin-top: 10px;
-     width: 100%;
-     .one{
-       display:inline-block;
-       width:100px;
-        height:11px;
-        font-size:14px;
-        font-family:Microsoft YaHei;
-        font-weight:400;
-        color:rgba(51,51,51,1);
-     }
-     .two{
-       margin-left:204px;
-       display:inline-block;
-        width:250px;
-        height:12px;
-        font-size:12px;
-        font-family:Microsoft YaHei;
-        font-weight:400;
-        color:rgba(102,102,102,1);
-     }
-   }
-   .dcp_two_3{
-     margin-top:10px;
-     .one{
-       display: inline-block;
-       width:80px;
-        height:13px;
-        font-size:14px;
-        font-family:Microsoft YaHei;
-        font-weight:400;
-        color:rgba(144,147,153,1);
-     }
-     input{
-     width:261px;
-      height:28px;
-      border:1px solid rgba(210,210,210,1);
-      border-radius:4px;
-     }
-      .two{
-        margin-top:6px;
-          .three-1{
-            margin-left:80px;
-          display: inline-block;
-          font-size:12px;
-          font-family:Microsoft YaHei;
-          font-weight:400;
-          color:rgba(102,102,102,1);
-        }
-      }
-   }
-   .dcp_two_4{
-     margin-top:14px;
-     .lyl_1{
-        /deep/.el-checkbox__label{
-                      font-size:14px;
-                  font-family:Adobe Heiti Std;
-                  font-weight:normal;
-                  color:rgba(144,147,153,1);
-                  }
-     }
-     .lyl_2{
-       margin-left:10px;
-      font-size:14px;
-      font-family:Microsoft YaHei;
-      font-weight:400;
-      color:rgba(144,147,153,1);
-     }
-     .lyl_3{
-       width:200px;
-        height:28px;
-        border:1px solid rgba(210,210,210,1);
-        border-radius:4px;
-     }
-     .lyl_4{
-       margin-left:10px;
-       font-size:14px;
-      font-family:Microsoft YaHei;
-      font-weight:400;
-      color:rgba(144,147,153,1);
-     }
-     .lyl_5{
-       width:120px;
-      height:28px;
-      border:1px solid rgba(210,210,210,1);
-      border-radius:4px;
-     }
-   }
-   .dcp_two_5{
-     margin-top: 4px;
-     position: relative;
-     .ten_1{
-       margin-left:119px;
-       font-size:14px;
-      font-family:Microsoft YaHei;
-      font-weight:400;
-      color:rgba(102,102,102,1);
-     }
-     .ten_2{
-       margin-left:184px;
-       font-size:14px;
-        font-family:Microsoft YaHei;
-        font-weight:400;
-        color:rgba(255,0,0,1);
-     }
-     .ten_3{
-       position:absolute;
-       right:61px;
-       font-size:14px;
-      font-family:Microsoft YaHei;
-      font-weight:400;
-      color:rgba(255,0,0,1);
-     }
-   }
-   .biaoji{
-     color:#25BAD9;
+.one__1 {
+  height: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(238, 238, 238, 1);
+  padding: 8px 12px 10px 20px;
+  .one-lyl {
+    width: 120px;
+    height: 15px;
+    font-size: 16px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: #333333;
+  }
+  .one-dcp {
+    display: flex;
+    .one__2 {
+      width: 72px;
+      height: 25px;
+      background: rgba(90, 199, 184, 1);
+      border-radius: 4px;
       cursor: pointer;
-   }
-   .two_2_one{
-     width: 100%;
-     height:342px;
-     border-bottom: 1px solid rgba(238, 238, 238, 1);
-   }
-   .two_2_two{
-       padding: 8px 12px 10px 20px;
-    .balance1{
-       margin-left:100px;
-                display: inline-block;
-                  width:136px;
-                  line-height: 13px;
-                  font-size:14px;
-                  font-family:Adobe Heiti Std;
-                  font-weight:normal;
-                  color:rgba(144,147,153,1);
-                    .reds1{
-                    font-size:14px;
-                    font-family:Adobe Heiti Std;
-                    font-weight:normal;
-                    color:rgba(255,0,0,1);
-                  }
-              }
-               .balance2{
-                 margin-left:80px;
-                display: inline-block;
-                  width:190px;
-                  line-height: 13px;
-                  font-size:14px;
-                  font-family:Adobe Heiti Std;
-                  font-weight:normal;
-                  color:rgba(144,147,153,1);
-                  input{
-                    width:80px;
-                    color:rgba(255,0,0,1);
-                    text-indent:8px;
-                  }
-              }
-   }
-   .three_one{
-      width: 100%;
-     height:580px;
-     border-bottom: 1px solid rgba(238, 238, 238, 1);
-   }
-   /deep/.el-radio__label{
-     font-size: 20px;
-   }
-   .three_two_one{
-    text-align: center;
-    margin-top:8px;
-   }
-   .three_two_two{
-    text-align: center;
-    margin-top:8px;
-   }
-   .three_two_three{
-     display: flex;
-    justify-content: center;
-    margin-top:20px; 
-    .three__one{
-          display: inline-block;
-          width:72px;
-          height:30px;
-          background:rgba(248,172,89,1);
-          border-radius:4px;
-           cursor: pointer;
-            display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #fff;
-        font-size:14px;
-        font-family:Microsoft YaHei;
-        font-weight:400;
-        color:rgba(255,254,254,1);
+      text-align: center;
+      span {
+        width: 56px;
+        height: 13px;
+        font-size: 14px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+      }
     }
-   }
-   .three_two_four{
-     span{
-       width:28px;
-        height:12px;
-        font-size:14px;
-        font-family:Microsoft YaHei;
-        font-weight:400;
-        color:rgba(102,102,102,1);
-     }
-   }
-   .three_dcp_one{
-     margin-left: 58px;
-   }
-   .three_dcp_two{
-     margin-left: 10px;
-   }
-   .three_dcp_three{
-     margin-left: 10px;
-   }
-   .three_dcp_four{
-     margin-left: 10px;
-   }
+    .one__3 {
+      text-align: center;
+      width: 72px;
+      height: 25px;
+      background: #1fbba6;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 8px;
+      span {
+        width: 56px;
+        height: 13px;
+        font-size: 14px;
+        font-family: Microsoft YaHei;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+      }
+    }
+  }
+}
+.foursy {
+  padding: 8px 12px 10px 20px;
+  .balance {
+    display: inline-block;
+    width: 136px;
+    line-height: 13px;
+    font-size: 14px;
+    font-family: Adobe Heiti Std;
+    font-weight: normal;
+    color: rgba(144, 147, 153, 1);
+    .reds {
+      font-size: 14px;
+      font-family: Adobe Heiti Std;
+      font-weight: normal;
+      color: rgba(51, 51, 51, 1);
+    }
+  }
+  .balance1 {
+    display: inline-block;
+    width: 136px;
+    line-height: 13px;
+    font-size: 14px;
+    font-family: Adobe Heiti Std;
+    font-weight: normal;
+    color: rgba(144, 147, 153, 1);
+    .reds1 {
+      font-size: 14px;
+      font-family: Adobe Heiti Std;
+      font-weight: normal;
+      color: rgba(255, 0, 0, 1);
+    }
+  }
+  .balance2 {
+    display: inline-block;
+    width: 190px;
+    line-height: 13px;
+    font-size: 14px;
+    font-family: Adobe Heiti Std;
+    font-weight: normal;
+    color: rgba(144, 147, 153, 1);
+    input {
+      width: 80px;
+      color: rgba(255, 0, 0, 1);
+      text-indent: 8px;
+    }
+  }
+  .balance3 {
+    display: inline-block;
+    width: 130px;
+    line-height: 13px;
+    font-size: 14px;
+    font-family: Adobe Heiti Std;
+    font-weight: normal;
+    color: rgba(144, 147, 153, 1);
+    /deep/.el-checkbox__label {
+      font-size: 14px;
+      font-family: Adobe Heiti Std;
+      font-weight: normal;
+      color: rgba(144, 147, 153, 1);
+    }
+  }
+}
+.dcp_two_1 {
+  margin-top: 10px;
+  .daoqi {
+    width: 98px;
+    height: 12px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: rgba(144, 147, 153, 1);
+  }
+  .balance4 {
+    margin-left: 180px;
+    display: inline-block;
+    width: 136px;
+    line-height: 13px;
+    font-size: 14px;
+    font-family: Adobe Heiti Std;
+    font-weight: normal;
+    color: rgba(144, 147, 153, 1);
+    /deep/.el-checkbox__label {
+      font-size: 14px;
+      font-family: Adobe Heiti Std;
+      font-weight: normal;
+      color: rgba(144, 147, 153, 1);
+    }
+  }
+}
+.dcp_two_2 {
+  margin-top: 10px;
+  width: 100%;
+  .one {
+    display: inline-block;
+    width: 100px;
+    height: 11px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: rgba(51, 51, 51, 1);
+  }
+  .two {
+    margin-left: 204px;
+    display: inline-block;
+    width: 250px;
+    height: 12px;
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: rgba(102, 102, 102, 1);
+  }
+}
+.dcp_two_3 {
+  margin-top: 10px;
+  .one {
+    display: inline-block;
+    width: 80px;
+    height: 13px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: rgba(144, 147, 153, 1);
+  }
+  input {
+    width: 261px;
+    height: 28px;
+    border: 1px solid rgba(210, 210, 210, 1);
+    border-radius: 4px;
+  }
+  .two {
+    margin-top: 6px;
+    .three-1 {
+      margin-left: 80px;
+      display: inline-block;
+      font-size: 12px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
+    }
+  }
+}
+.dcp_two_4 {
+  margin-top: 14px;
+  .lyl_1 {
+    /deep/.el-checkbox__label {
+      font-size: 14px;
+      font-family: Adobe Heiti Std;
+      font-weight: normal;
+      color: rgba(144, 147, 153, 1);
+    }
+  }
+  .lyl_2 {
+    margin-left: 10px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: rgba(144, 147, 153, 1);
+  }
+  .lyl_3 {
+    width: 200px;
+    height: 28px;
+    border: 1px solid rgba(210, 210, 210, 1);
+    border-radius: 4px;
+  }
+  .lyl_4 {
+    margin-left: 10px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: rgba(144, 147, 153, 1);
+  }
+  .lyl_5 {
+    width: 120px;
+    height: 28px;
+    border: 1px solid rgba(210, 210, 210, 1);
+    border-radius: 4px;
+  }
+}
+.dcp_two_5 {
+  margin-top: 4px;
+  position: relative;
+  .ten_1 {
+    margin-left: 119px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: rgba(102, 102, 102, 1);
+  }
+  .ten_2 {
+    margin-left: 184px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: rgba(255, 0, 0, 1);
+  }
+  .ten_3 {
+    position: absolute;
+    right: 61px;
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: rgba(255, 0, 0, 1);
+  }
+}
+.biaoji {
+  color: #25bad9;
+  cursor: pointer;
+}
+.two_2_one {
+  width: 100%;
+  height: 342px;
+  border-bottom: 1px solid rgba(238, 238, 238, 1);
+}
+.two_2_two {
+  padding: 8px 12px 10px 20px;
+  .balance1 {
+    margin-left: 100px;
+    display: inline-block;
+    width: 136px;
+    line-height: 13px;
+    font-size: 14px;
+    font-family: Adobe Heiti Std;
+    font-weight: normal;
+    color: rgba(144, 147, 153, 1);
+    .reds1 {
+      font-size: 14px;
+      font-family: Adobe Heiti Std;
+      font-weight: normal;
+      color: rgba(255, 0, 0, 1);
+    }
+  }
+  .balance2 {
+    margin-left: 80px;
+    display: inline-block;
+    width: 190px;
+    line-height: 13px;
+    font-size: 14px;
+    font-family: Adobe Heiti Std;
+    font-weight: normal;
+    color: rgba(144, 147, 153, 1);
+    input {
+      width: 80px;
+      color: rgba(255, 0, 0, 1);
+      text-indent: 8px;
+    }
+  }
+}
+.three_one {
+  width: 100%;
+  height: 580px;
+  border-bottom: 1px solid rgba(238, 238, 238, 1);
+}
+/deep/.el-radio__label {
+  font-size: 20px;
+}
+.three_two {
+  .three_two_one {
+    text-align: center;
+    margin-top: 8px;
+  }
+  .three_two_two {
+    text-align: center;
+    margin-top: 8px;
+  }
+  .three_two_three {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    .three__one {
+      display: inline-block;
+      width: 72px;
+      height: 30px;
+      background: rgba(248, 172, 89, 1);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 14px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      color: rgba(255, 254, 254, 1);
+    }
+  }
+  .three_two_four {
+    span {
+      width: 28px;
+      height: 12px;
+      font-size: 14px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
+    }
+  }
+  .three_dcp_one {
+    margin-left: 58px;
+  }
+  .three_dcp_two {
+    margin-left: 38px;
+  }
+  .three_dcp_three {
+    margin-left: 40px;
+  }
+  .three_dcp_four {
+    margin-left: 40px;
+  }
+}
+.main-inp1 {
+  height: 120px;
+  /deep/.textarea {
+    width: 248px;
+    height: 112px;
+    .el-textarea__inner {
+      font-family: "Microsoft" !important;
+      font-size: 14px !important;
+      // overflow-y: scroll;
+      width: 248px;
+      height: 112px;
+      margin-top: 2px;
+    }
+    .el-textarea__inner:focus {
+      border-color: #d2d2d2;
+    }
+  }
+}
+.lable_top {
+  margin-bottom: 52px;
+}
+.main-inp {
+  height: 34px;
+  // padding: 10px 0 5px 0;
+  .form_item1 {
+    text-transform: uppercase;
+  }
+
+  input {
+    -moz-appearance: none;
+    width: 248px;
+    height: 32px;
+    border: none;
+    border: 1px solid rgba(210, 210, 210, 1);
+    border-radius: 4px;
+    color: #333333;
+    font-size: inherit;
+    text-indent: 8px;
+    outline: 0;
+    -moz-appearance: none;
+    background: #fff;
+  }
+  .input_beizhu {
+    -moz-appearance: none;
+    width: 612px;
+    height: 46px;
+    border: none;
+    border: 1px solid rgba(210, 210, 210, 1);
+    border-radius: 4px;
+    color: #333333;
+    font-size: inherit;
+    text-indent: 8px;
+    outline: 0;
+    -moz-appearance: none;
+    background: #fff;
+    margin-left: 102px;
+  }
+  .input_name {
+    margin-top: 3px;
+  }
+  .input_one {
+    padding-bottom: 0px;
+  }
+
+  input::-webkit-input-placeholder {
+    font-size: 14px;
+    font-family: Microsoft YaHei;
+    font-weight: 400;
+    color: rgba(213, 216, 223, 1);
+  }
+  /deep/.el-input__suffix {
+    display: none;
+  }
+  /deep/.el-input--suffix {
+    /deep/input {
+      -moz-appearance: none;
+      width: 248px;
+      height: 32px;
+      border: none;
+      border: 1px solid rgba(210, 210, 210, 1) !important;
+      border-radius: 4px;
+      color: #333333;
+      font-size: inherit;
+      text-indent: 0px;
+      outline: 0;
+      -moz-appearance: none;
+      background: #fff;
+    }
+  }
+  /deep/.el-input__prefix {
+    display: none;
+  }
+}
+.label-name5 {
+  display: inline-block;
+  width: 102px;
+  height: 50px;
+  font-size: 14px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: rgba(51, 51, 51, 1);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+.label-name {
+  display: inline-block;
+  width: 102px;
+  height: 50px;
+  font-size: 14px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: rgba(51, 51, 51, 1);
+}
+.label-name1 {
+  display: inline-block;
+  width: 120px;
+  height: 50px;
+  font-size: 14px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: rgba(51, 51, 51, 1);
+}
+.label-name2 {
+  display: inline-block;
+  width: 102px;
+  height: 50px;
+  font-size: 14px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: rgba(51, 51, 51, 1);
+}
+.label-name3 {
+  display: inline-block;
+  width: 74px;
+  height: 50px;
+  font-size: 14px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: rgba(51, 51, 51, 1);
+}
+.label-left {
+  margin-left: 52px;
+}
+.my-form-item {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  // border-top: 1px solid rgba(239, 242, 245, 1);
+  border-bottom: 1px solid rgba(239, 242, 245, 1);
+}
+.box_one_1 {
+  overflow: auto;
+  max-height: 640px;
+}
+::-webkit-scrollbar {
+  height: 56px;
+  width: 8px;
+  background-color: #fff;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(227, 227, 227, 1);
+}
+.main_inpdcp {
+  .three_two_one {
+    text-align: center;
+    margin-top: 16px;
+  }
+  .three_two_two {
+    text-align: center;
+    margin-top: 8px;
+  }
+  .three_two_three {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    .three__one {
+      display: inline-block;
+      width: 72px;
+      height: 30px;
+      background: rgba(248, 172, 89, 1);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-size: 14px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      color: rgba(255, 254, 254, 1);
+    }
+  }
+  .three_two_four {
+    span {
+      width: 28px;
+      height: 12px;
+      font-size: 14px;
+      font-family: Microsoft YaHei;
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
+    }
+  }
+  .three_dcp_one {
+    margin-left: 112px;
+  }
+  .three_dcp_two {
+    margin-left: 38px;
+  }
+  .three_dcp_three {
+    margin-left: 40px;
+  }
+  .three_dcp_four {
+    margin-left: 40px;
+  }
+}
+.add-icon {
+  margin-left: 6px;
+  cursor: pointer;
+  display: inline-block;
+  width: 20px;
+  height: 50px;
+  font-size: 18px;
+  text-align: center;
+  color: rgba(210, 210, 210, 1);
+}
+.yuan {
+  margin-left: 10px;
+}
 </style>
