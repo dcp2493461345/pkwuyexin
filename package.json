@@ -47,7 +47,7 @@
     "eslint-plugin-vue": "5.2.2",
     "html-webpack-plugin": "3.2.0",
     "mockjs": "1.0.1-beta3",
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "postcss-loader": "^3.0.0",
     "pre-commit": "^1.2.2",
     "runjs": "^4.3.2",
